@@ -38,7 +38,7 @@
 </div>
 <script>
 const NS = "pdmlab-7k2m9x", PASS = "dm-table-2026";
-const GET = k => fetch(`https://abacus.jasoncameron.dev/get/${NS}/${encodeURIComponent(k)}`).then(r => r.ok ? r.json() : {value:0}).then(j => j.value || 0).catch(() => 0);
+const GET = k => fetch(`https://abacus.jasoncameron.dev/get/${NS}/${k}`).then(r => r.ok ? r.json() : {value:0}).then(j => j.value || 0).catch(() => 0);
 
 const PAGES = [["home","Home"],["initiative-tracker","Initiative Tracker"],["dm-screen-cheat-sheet","DM Screen"],["combat-tracker","Combat Tracker"],["condition-cards","Condition Cards"],["session-notes-template","Session Notes"],["guides/how-to-track-initiative","Guide: Initiative"],["guides/what-goes-on-a-dm-screen","Guide: DM Screen"],["about","About"],["contact","Contact"],["privacy","Privacy"]];
 const SRCS = ["google","bing","duckduckgo","reddit","pinterest","facebook","x","youtube","internal","direct"];
@@ -53,12 +53,12 @@ async function load() {
   const app = document.getElementById("app");
   app.innerHTML = "<p style='color:var(--dim)'>Loading counters…</p>";
   const [uv, pvArr, srcArr, langArr, dlArr, gh] = await Promise.all([
-    GET("uv:all"),
-    Promise.all(PAGES.map(p => GET("pv:" + p[0]))),
-    Promise.all(SRCS.map(s => GET("src:" + s))),
-    Promise.all(LANGS.map(l => GET("lng:" + l))),
-    Promise.all(DLS.map(d => GET("dl:" + d))),
-    GET("ext:github")
+    GET("uv.all"),
+    Promise.all(PAGES.map(p => GET("pv." + p[0].replace(/\//g, "-")))),
+    Promise.all(SRCS.map(s => GET("src." + s))),
+    Promise.all(LANGS.map(l => GET("lng." + l))),
+    Promise.all(DLS.map(d => GET("dl." + d))),
+    GET("ext.github")
   ]);
   const pvTotal = pvArr.reduce((a,b)=>a+b,0), dlTotal = dlArr.reduce((a,b)=>a+b,0);
   const conv = pvTotal ? (dlTotal/pvTotal*100).toFixed(1) : "0.0";
