@@ -20,21 +20,36 @@ const KEYS = ["uv.all",
   ...LANGS.map(l => "lng." + l),
   ...DLS.map(d => "dl." + d)];
 
-const get = k => new Promise(res => {
+const getOnce = k => new Promise(res => {
   const req = https.get(`https://abacus.jasoncameron.dev/get/${NS}/${k}`, r => {
     let d = "";
     r.on("data", c => d += c);
-    r.on("end", () => { try { res(JSON.parse(d).value || 0); } catch { res(0); } });
+    r.on("end", () => { try { res(JSON.parse(d).value ?? 0); } catch { res(null); } });
   });
-  req.on("error", () => res(0));
-  req.setTimeout(15000, () => { req.destroy(); res(0); });
+  req.on("error", () => res(null));
+  req.setTimeout(20000, () => { req.destroy(); res(null); });
 });
+/* Abacus is flaky under bursts: retry each key up to 3x, concurrency capped at 4 */
+const get = async k => {
+  for (let i = 0; i < 3; i++) {
+    const v = await getOnce(k);
+    if (v !== null) return v;
+    await new Promise(r => setTimeout(r, 1500 * (i + 1)));
+  }
+  return 0;
+};
+async function mapLimit(items, limit, fn) {
+  const out = [];
+  for (let i = 0; i < items.length; i += limit)
+    out.push(...await Promise.all(items.slice(i, i + limit).map(fn)));
+  return out;
+}
 
 const reportOnly = process.argv.includes("--report");
 
 const prev = fs.existsSync(LOG) ? JSON.parse(fs.readFileSync(LOG, "utf8")) : { date: "-", counters: {} };
 const counters = {};
-await Promise.all(KEYS.map(async k => { counters[k] = await get(k); }));
+await mapLimit(KEYS, 4, async k => { counters[k] = await get(k); });
 
 const delta = k => counters[k] - (prev.counters[k] ?? 0);
 const top = (prefix, n = 5) => KEYS.filter(k => k.startsWith(prefix))
