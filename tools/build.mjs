@@ -1,0 +1,631 @@
+/* build.mjs — renders all pages of Printable DM into static HTML.
+   Run: node tools/build.mjs  (from repo root) */
+import { writeFileSync, mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+
+const SITE = "https://kylin-feng.github.io/printable-dm";
+const BUILT = "2026-11-18";
+const INDEXNOW_KEY = "7f3a9c21e8b4d6502a9f1c33ab54e7d8";
+const YEAR = "2026";
+
+/* ---------------- shared fragments ---------------- */
+
+const NAV = [
+  ["/initiative-tracker/", "Initiative Tracker"],
+  ["/dm-screen-cheat-sheet/", "DM Screen"],
+  ["/combat-tracker/", "Combat Tracker"],
+  ["/condition-cards/", "Condition Cards"],
+  ["/session-notes-template/", "Session Notes"],
+  ["/guides/how-to-track-initiative/", "Guides"],
+];
+
+const PRODUCTS = [
+  { slug: "initiative-tracker", icon: "\u2694\uFE0F", name: "Initiative Tracker", desc: "A 22-slot roster with AC, HP and notes columns plus a round counter strip. The one sheet every DM prints ten of.", meta: ["2 pages", "US Letter + A4", "PDF"] },
+  { slug: "dm-screen-cheat-sheet", icon: "\uD83D\uDDC4\uFE0F", name: "DM Screen Cheat Sheet", desc: "Four dense reference inserts: action economy, all 15 conditions, common DCs and the dying rules.", meta: ["5 pages", "US Letter + A4", "PDF"] },
+  { slug: "combat-tracker", icon: "\uD83D\uDCE1", name: "Combat Tracker", desc: "Eight oversized combatant blocks with HP pips and a concentration tracker for long boss fights.", meta: ["2 pages", "US Letter + A4", "PDF"] },
+  { slug: "condition-cards", icon: "\uD83C\uDCCF", name: "Condition Cards", desc: "Fifteen die-cut cards, one per condition. Cut them out, clip them to the DM screen, never argue about poisoned again.", meta: ["2 pages", "15 cards", "PDF"] },
+  { slug: "session-notes-template", icon: "\uD83D\uDCD3", name: "Session Notes Template", desc: "A two-page recap sheet: party status, NPCs met, loot handed out and the hooks you planted for next time.", meta: ["2 pages", "US Letter + A4", "PDF"] },
+];
+
+function header(base) {
+  const nav = NAV.map(([href, label]) =>
+    `<a href="${base}${href.slice(1)}">${label}</a>`).join("\n          ");
+  return `<header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="${base}index.html">
+          <img class="d20" src="${base}assets/favicon.svg" alt="" aria-hidden="true">
+          Printable&nbsp;DM
+        </a>
+        <nav class="site-nav" aria-label="Main">
+          ${nav}
+        </nav>
+      </div>
+    </header>`;
+}
+
+function footer(base) {
+  return `<footer class="site-footer">
+      <div class="wrap cols">
+        <div>
+          <h4>Free Tools</h4>
+          <ul>
+            ${PRODUCTS.map(p => `<li><a href="${base}${p.slug}/">${p.name}</a></li>`).join("\n            ")}
+          </ul>
+        </div>
+        <div>
+          <h4>Guides</h4>
+          <ul>
+            <li><a href="${base}guides/how-to-track-initiative/">How to Track Initiative in D&D 5e</a></li>
+            <li><a href="${base}guides/what-goes-on-a-dm-screen/">What Goes on a DM Screen</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Site</h4>
+          <ul>
+            <li><a href="${base}about/">About</a></li>
+            <li><a href="${base}contact/">Contact</a></li>
+            <li><a href="${base}privacy/">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="wrap fine">
+        <p>&copy; ${YEAR} Printable DM. Our PDFs are free for personal use at your table. This is unofficial fan content and is not approved by, endorsed by, or affiliated with Wizards of the Coast. Dungeons &amp; Dragons and D&amp;D are trademarks of Wizards of the Coast LLC.</p>
+      </div>
+    </footer>`;
+}
+
+function faqSchema(faq) {
+  if (!faq || !faq.length) return "";
+  const items = faq.map(([q, a]) => `{"@type":"Question","name":${JSON.stringify(q)},"acceptedAnswer":{"@type":"Answer","text":${JSON.stringify(a)}}}`).join(",");
+  return `<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[${items}]}</script>`;
+}
+
+function breadcrumbSchema(crumbs) {
+  const items = crumbs.map(([url, name], i) => {
+    const item = url ? `,"item":"${SITE}${url === "/" ? "/" : url}"` : "";
+    return `{"@type":"ListItem","position":${i + 1},"name":${JSON.stringify(name)}${item}}`;
+  }).join(",");
+  return `<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[${items}]}</script>`;
+}
+
+function layout({ base = "", path = "/", title, desc, h1Block, bodyHTML, crumbs = [], faq = [], noindex = false }) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <meta name="description" content="${desc}">
+  ${noindex ? '<meta name="robots" content="noindex,nofollow">' : `<link rel="canonical" href="${SITE}${path}">`}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${title}">
+  <meta property="og:description" content="${desc}">
+  <meta property="og:url" content="${SITE}${path}">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" type="image/svg+xml" href="${base}assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="${base}assets/css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Printable DM","url":"${SITE}/"}</script>
+  ${breadcrumbSchema(crumbs)}
+  ${faqSchema(faq)}
+</head>
+<body>
+  ${header(base)}
+  ${h1Block}
+  <main>
+    ${bodyHTML}
+  </main>
+  ${footer(base)}
+  <script src="${base}assets/js/abacus.js" defer></script>
+</body>
+</html>`;
+}
+
+function pageHead(crumbTrail, h1, lead) {
+  const crumbs = crumbTrail.map(([href, label]) =>
+    href ? `<a href="${href}">${label}</a>` : label).join(" &rsaquo; ");
+  return `<div class="page-head">
+      <div class="wrap">
+        <div class="crumbs">${crumbs}</div>
+        <h1>${h1}</h1>
+        <p>${lead}</p>
+      </div>
+    </div>`;
+}
+
+function dlBox(base, pdf, name, bullets) {
+  return `<div class="dl-box">
+    <div class="info">
+      <strong>${name} &mdash; free PDF</strong>
+      <ul>${bullets.map(b => `<li>${b}</li>`).join("")}</ul>
+    </div>
+    <a class="btn btn-primary" data-dl="${pdf.replace(/\.pdf$/, "")}"
+       href="${base}assets/downloads/${pdf}" download>&#11015;&#65039; Download free PDF</a>
+  </div>`;
+}
+
+/* ---------------- home ---------------- */
+
+const homeBody = `
+    <section class="hero">
+      <div class="wrap">
+        <p class="kicker">Free print-ready tools for Dungeon Masters</p>
+        <h1>Run tighter tables with printable D&amp;D 5e tools</h1>
+        <p class="lead">Beautifully laid-out, genuinely free PDFs: initiative trackers, DM screen cheat sheets, combat trackers and session recap sheets. No email required, no watermark &mdash; just download, print and play.</p>
+        <div class="cta-row">
+          <a class="btn btn-gold" href="#tools">Browse the toolkit</a>
+          <a class="btn btn-ghost" href="guides/how-to-track-initiative/">Read the initiative guide</a>
+        </div>
+      </div>
+    </section>
+    <section class="block" id="tools">
+      <div class="wrap">
+        <h2 class="section-title">The DM toolkit</h2>
+        <p class="section-sub">Every sheet below is a free PDF designed for US Letter and A4, in both color and ink-friendly layouts. Print a stack and keep them in your DM bag.</p>
+        <div class="card-grid">
+          ${PRODUCTS.map(p => `
+          <article class="card">
+            <div class="icon" aria-hidden="true">${p.icon}</div>
+            <h3><a href="${p.slug}/">${p.name}</a></h3>
+            <p>${p.desc}</p>
+            <div class="meta">${p.meta.map(m => `<span>${m}</span>`).join("")}</div>
+          </article>`).join("\n        ")}
+        </div>
+      </div>
+    </section>
+    <section class="block alt">
+      <div class="wrap">
+        <h2 class="section-title">Why paper still wins at the table</h2>
+        <p class="section-sub">Apps crash, laptops create screens between you and the players. A well-designed sheet never updates mid-session and never needs charging.</p>
+        <div class="card-grid">
+          <article class="card">
+            <h3>Designed by DMs, for tables</h3>
+            <p>Every column exists because a real fight needed it: AC next to initiative, concentration boxes next to HP, a notes column wide enough for actual handwriting.</p>
+          </article>
+          <article class="card">
+            <h3>Print-anywhere layouts</h3>
+            <p>US Letter and A4 safe areas, generous margins for hole-punching, and high-contrast inks that survive a cheap office printer.</p>
+          </article>
+          <article class="card">
+            <h3>Free means free</h3>
+            <p>No email wall, no trial, no watermark across the initiative order. Download, photocopy for the whole table, done.</p>
+          </article>
+        </div>
+      </div>
+    </section>`;
+
+/* ---------------- product pages ---------------- */
+
+const productPages = [
+  {
+    slug: "initiative-tracker",
+    title: "Free D&D 5e Initiative Tracker Printable PDF (22 Slots)",
+    desc: "Download a free printable initiative tracker for D&D 5e. A 22-slot roster with AC, HP and notes columns, round counter strip and quick-reference sidebar. US Letter and A4 PDF.",
+    h1: "D&D 5e Initiative Tracker &mdash; Printable PDF",
+    lead: "A one-sheet initiative roster that survives a real session: 22 combatant slots, AC and HP columns side by side, and a round tracker that keeps the whole table honest.",
+    pdf: "initiative-tracker.pdf",
+    pdfBullets: ["2 pages, landscape", "US Letter &amp; A4 safe areas", "22 combatant slots + round strip"],
+    inside: [
+      "<strong>Initiative roster (22 slots)</strong> &mdash; initiative score, name, AC, HP max and a wide notes column, ordered top to bottom so you read the turn order like a script.",
+      "<strong>Round &amp; turn strip</strong> &mdash; tick-boxes for rounds 1&ndash;20 plus a &lsquo;delayed/held action&rsquo; marker column so nobody gets skipped twice.",
+      "<strong>Quick-reference sidebar</strong> &mdash; surprise rules, tie-breaking by Dexterity, and the readied-action trigger reminder, right where you write the order.",
+    ],
+    how: `<p>Print one per fight (or laminate one and use dry-erase markers). Write every combatant in initiative order before the first turn &mdash; players first, then monsters, then lair actions if you use them. During play, work straight down the sheet and back to the top, ticking the round box each time initiative order wraps.</p>
+<p>The AC column sits next to the name so you can answer &ldquo;does a 17 hit the ogre?&rdquo; without flipping to the stat block. Use the HP column as damage tally marks rather than numbers &mdash; it is faster at the table and arithmetic errors drop to zero. The notes column earns its width for concentration spells, marks from hunters, and &ldquo;this one flees at half HP&rdquo; reminders to future-you.</p>`,
+    printTip: "Print at 100% scale (&ldquo;Actual size&rdquo;, not &ldquo;Fit&rdquo;) so the ruling stays exactly 22 rows; margins are already sized for a three-hole punch.",
+    faq: [
+      ["Is this initiative tracker really free?", "Yes — no email, no account, no watermark. Download the PDF and print as many copies as your table needs."],
+      ["Does it work for A4 as well as US Letter?", "The layout keeps every element inside an area that prints safely on both US Letter and A4 at 100% scale."],
+      ["Is it compatible with D&D 5e?", "It is built around 5e initiative: Dexterity tie-breaks, ready and delay conventions, and standard stat-line needs. It works fine for Pathfinder 2e and other d20 systems too."],
+      ["Can I type into it instead of printing?", "This is a print-first PDF. If you want a digital version, tell us on the contact page — enough requests and we will ship a fillable version."],
+    ],
+    related: ["dm-screen-cheat-sheet", "combat-tracker"],
+  },
+  {
+    slug: "dm-screen-cheat-sheet",
+    title: "Printable DM Screen Cheat Sheet PDF for D&D 5e (5 Inserts)",
+    desc: "Free 5-page printable DM screen cheat sheet for D&D 5e: action economy, all 15 conditions, common DCs, cover, concentration and death saving throws. Letter & A4 PDF.",
+    h1: "DM Screen Cheat Sheet &mdash; 5 Printable Inserts",
+    lead: "Five dense, scannable reference pages sized to fold behind any DM screen: the rules you actually look up mid-fight, minus the flavor text.",
+    pdf: "dm-screen-cheat-sheet.pdf",
+    pdfBullets: ["5 pages, portrait", "US Letter &amp; A4 safe areas", "Conditions, DCs, action economy, death rules"],
+    inside: [
+      "<strong>Page 1 &mdash; Combat flow</strong> &mdash; action economy (action / bonus action / movement / reaction / free object interaction), attack and saving throw resolution, and opportunity attack triggers.",
+      "<strong>Pages 2&ndash;3 &mdash; All 15 conditions</strong> &mdash; each condition in one line of effect plus one line of end-condition. Blinded through Unconscious, no page-flipping.",
+      "<strong>Page 4 &mdash; Common DCs &amp; checks</strong> &mdash; the standard difficulty ladder, typical ability check examples, passive checks, cover (half / three-quarters / total) and dying rules with death save boxes.",
+      "<strong>Page 5 &mdash; Concentration &amp; common snags</strong> &mdash; what breaks concentration, the DC formula, ready/delay reminders, and the grapple/shove contest rules.",
+    ],
+    how: `<p>Print all four pages, fold along the middle and stand them inside your screen landscape-style: combat flow and conditions facing you at the start of the fight, DCs and concentration one flip away. If your screen is short, trim the top margin &mdash; the header band is decorative, the tables are not.</p>
+<p>Each block is written as a ruling, not a rule citation: &ldquo;Prone: melee attacks against it have advantage, ranged have disadvantage; ends by spending half its movement.&rdquo; That is the whole point of a cheat sheet &mdash; the fastest path from question to &ldquo;here is what happens&rdquo;.</p>`,
+    printTip: "Choose grayscale if your table printer drinks color ink — the layout is tested to stay readable in pure black and white.",
+    faq: [
+      ["What size screen do these inserts fit?", "Pages print on US Letter / A4 and fold to fit standard landscape DM screens; trim margins for smaller folding screens."],
+      ["Do the condition summaries match the official rules?", "They summarize the 5e condition definitions line for line in plain language. For exact wording, the SRD is the source of truth."],
+      ["Can I edit the cheat sheet?", "The PDF is print-first. If you want a build-your-own version, request it on the contact page."],
+      ["Is it free like the other sheets?", "Yes — all four pages, one PDF, zero cost, no email required."],
+    ],
+    related: ["condition-cards", "initiative-tracker"],
+  },
+  {
+    slug: "combat-tracker",
+    title: "Free Printable D&D 5e Combat Tracker PDF (8 Combatants)",
+    desc: "Free printable combat tracker for D&D 5e: eight oversized combatant blocks with HP pips, concentration tracker and damage notes. Boss fights without losing count.",
+    h1: "Combat Tracker &mdash; Printable PDF",
+    lead: "Oversized blocks for up to eight combatants, with pip-style HP tracking and a concentration row &mdash; built for boss fights where three goblins and a dragon all have things going on.",
+    pdf: "combat-tracker.pdf",
+    pdfBullets: ["2 pages, landscape", "8 large combatant blocks", "HP pips + concentration tracker"],
+    inside: [
+      "<strong>Eight combatant blocks</strong> &mdash; name, initiative, AC, and a big HP pip field: shade pips down as damage lands, no mental subtraction mid-round.",
+      "<strong>Concentration &amp; marks row</strong> &mdash; tick-boxes for concentration, bless, poisoned and &lsquo;bloodied at half&rsquo; per combatant.",
+      "<strong>Turn wheel &amp; notes strip</strong> &mdash; round counter plus a wide strip for lair actions, legendary action budget and environmental effects.",
+    ],
+    how: `<p>Use one block per combatant &mdash; monsters and players both &mdash; and pre-fill the HP pips to each creature&rsquo;s maximum. When damage lands, cross off pips from the right; when healing lands, redraw them. The pip system is slower to start than writing numbers but radically faster in rounds three through ten, which is where combats actually live.</p>
+<p>The marks row is for the three states DMs forget most: concentration (roll that Con save when the wizard takes a hit), conditions with saves, and bloodied &mdash; which most tables use as a cue for phase changes and morale checks.</p>`,
+    printTip: "One sheet covers eight combatants; print page 2 double-sided so the notes strip is always on the back of a full fight.",
+    faq: [
+      ["How many combatants fit on one sheet?", "Eight blocks per sheet; print two sheets for big set-piece battles."],
+      ["What are the HP pips for?", "Shade one pip per hit point (or per 5 HP for big monsters). It removes mid-round arithmetic entirely."],
+      ["Does it replace the initiative tracker?", "It complements it: initiative tracker for order, combat tracker for state. Small fights need only the tracker."],
+      ["Is it free?", "Yes, like everything on the site — free PDF, no email."],
+    ],
+    related: ["initiative-tracker", "dm-screen-cheat-sheet"],
+  },
+  {
+    slug: "condition-cards",
+    title: "Free Printable D&D 5e Condition Cards PDF (15 Cards)",
+    desc: "Free printable D&D 5e condition cards: all 15 conditions as die-cut reference cards. Cut, fold over your DM screen, and end condition arguments at the table.",
+    h1: "Condition Cards &mdash; 15 Printable Reference Cards",
+    lead: "Fifteen cards, one per condition, each with the effect and its end-condition in plain language. Cut them out and clip them to your screen &mdash; when a player is poisoned, hand them the card.",
+    pdf: "condition-cards.pdf",
+    pdfBullets: ["2 pages, portrait", "15 die-cut cards", "Dashed cut lines + corner ticks"],
+    inside: [
+      "<strong>All 15 conditions</strong> &mdash; Blinded, Charmed, Deafened, Frightened, Grappled, Incapacitated, Invisible, Paralyzed, Petrified, Poisoned, Prone, Restrained, Stunned, Unconscious and Exhaustion (6 levels).",
+      "<strong>Effect + end-condition on every card</strong> &mdash; what it does to you and what removes it, in two lines each.",
+      "<strong>Screen-fold header</strong> &mdash; fold the top band over your DM screen or binder edge so the condition name faces the players.",
+    ],
+    how: `<p>Print on cardstock if you have it (regular paper plus a laminator is even better), cut along the dashed lines, and keep the deck in an envelope taped inside your screen. When a condition lands on a character, slide the card across the table to that player &mdash; they read it, they own it, and you never re-explain frightened for the fourth time.</p>
+<p>The exhaustion card is a six-step ladder rather than a binary state, which is why it gets the same card size as the others: level, effect, and the fact that only a long rest plus food and drink removes a level.</p>`,
+    printTip: "Cardstock (65–80 lb / 170–220 gsm) feels great and survives greasy table hands; plain paper works fine if you plan to laminate.",
+    faq: [
+      ["Do the cards include Exhaustion?", "Yes — as a six-level ladder card, plus the other 14 standard conditions."],
+      ["Are they double-sided?", "Single-sided by design: fold the header band over the screen so the name shows and the text faces you."],
+      ["Can players use them too?", "Please do — that is the whole idea. Print a deck for the table, keep one at the screen."],
+      ["What paper should I use?", "Cardstock if you have it, any paper if you laminate. Cut lines are printed for scissors or a paper trimmer."],
+    ],
+    related: ["dm-screen-cheat-sheet", "combat-tracker"],
+  },
+  {
+    slug: "session-notes-template",
+    title: "Free D&D Session Notes Template PDF (Printable Recap Sheet)",
+    desc: "Free printable D&D session notes template: party status, NPCs met, loot, secrets revealed and next-session hooks on a two-page recap sheet. Letter & A4 PDF.",
+    h1: "Session Notes Template &mdash; Printable Recap Sheet",
+    lead: "The two-page sheet that remembers your campaign for you: who they met, what they took, which secrets slipped, and the three hooks you planted for next session.",
+    pdf: "session-notes.pdf",
+    pdfBullets: ["2 pages, landscape", "Party / NPC / loot / hooks sections", "Session header with date &amp; party level"],
+    inside: [
+      "<strong>Session header</strong> &mdash; session number, in-game date, real date, party level and who actually showed up.",
+      "<strong>Party status board</strong> &mdash; each PC row with HP state, conditions, inspiration and gold delta &mdash; the numbers that need carrying into next session.",
+      "<strong>NPCs met &amp; names dropped</strong> &mdash; the single most-forgotten category: names, first impression, and what they want.",
+      "<strong>Loot, secrets &amp; hooks</strong> &mdash; items handed out, plot points the players learned, and three blank hook boxes &mdash; because a session that ends without a hook is a session that ends the campaign.",
+    ],
+    how: `<p>Fill it in during the last fifteen minutes of the session, not after &mdash; ask the players to recap out loud what happened while you write. The out-loud recap doubles as your plot-fixing window: whatever the players remember is what actually happened, regardless of your prep notes.</p>
+<p>At the start of the next session, read the hooks box aloud as your cold open. It takes forty seconds and it re-immerses the table faster than any &lsquo;previously on&rsquo; speech.</p>`,
+    printTip: "Print double-sided so the whole session lives on one physical sheet that clips into your campaign binder.",
+    faq: [
+      ["One sheet per session?", "Yes — the whole design assumes one session = one sheet in a growing campaign binder."],
+      ["Does it work for online games?", "It prints beautifully, but many online DMs keep it open in a tablet PDF annotator instead."],
+      ["Can my players fill parts of it?", "That works great — hand the loot and NPC sections to the party note-taker and keep status and hooks for yourself."],
+      ["Is it free?", "Yes — free PDF, no email, print as many as your campaign runs."],
+    ],
+    related: ["initiative-tracker", "combat-tracker"],
+  },
+];
+
+/* ---------------- guides ---------------- */
+
+const guides = [
+  {
+    slug: "guides/how-to-track-initiative",
+    title: "How to Track Initiative in D&D 5e: The Complete DM Guide",
+    desc: "How initiative works in D&D 5e — rolling, tie-breaks, grouping monsters, tracking tools and the habits that keep combat fast. Includes a free printable tracker.",
+    h1: "How to Track Initiative in D&D 5e",
+    lead: "Rolling it is easy. Keeping a ten-creature fight moving for six rounds without skipping anyone is the actual skill. Here is the full method, from the roll to the habits that keep combat fast.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <h2>The initiative roll, start to finish</h2>
+      <p>When combat begins, everyone rolls initiative: d20 + Dexterity modifier, including the DM for every monster group. Important: monsters of the same kind act together — you roll once for all six goblins and they share a turn. That single rule is the biggest initiative speed-up in the book and most tables ignore it.</p>
+      <p>Write every result down before anyone acts. If a creature has a modifier to initiative (Alert feat, magic items, the Improved Initiative feature), it applies to the roll — not to a flat 10 in place of rolling unless the ability explicitly says so.</p>
+
+      <h2>Ties: the Dexterity rule and the house-rule alternative</h2>
+      <p>Officially, ties go to whoever has the higher Dexterity modifier; if those are also tied, roll off or let the players win ties. In practice many DMs run &ldquo;players before monsters&rdquo; on ties — it feels generous, costs nothing, and players never notice it is a house rule.</p>
+
+      <h2>Three ways to physically track order (and when each wins)</h2>
+      <table>
+        <tr><th>Method</th><th>Best for</th><th>Weakness</th></tr>
+        <tr><td>Written roster / tracker sheet</td><td>Any fight, any size; zero prep</td><td>You must announce whose turn it is</td></tr>
+        <tr><td>Initiative tents (folded cards over the screen)</td><td>Tables where players track their own position</td><td>Prep before the fight; bad for surprise encounters</td></tr>
+        <tr><td>Apps &amp; VTT trackers</td><td>Online play, huge battles</td><td>Screen between you and the table; battery, updates</td></tr>
+      </table>
+      <p>Our recommendation: a written roster for 95% of fights. A single <a href="../../initiative-tracker/">printable initiative tracker sheet</a> with 22 slots covers the biggest published adventures, and a pencil never crashes mid-boss.</p>
+
+      <h2>The habits that actually make initiative fast</h2>
+      <h3>1. Announce on-deck, every turn</h3>
+      <p>&ldquo;Aria, you are up — Thorin, you are on deck.&rdquo; The on-deck call is the single highest-value sentence in combat DMing: it halves the &ldquo;wait, my turn?&rdquo; delay and lets the next player plan while the current one acts.</p>
+      <h3>2. Group by roster position, not by creature type</h3>
+      <p>If the wolves act between two players, they are physically between those players on your sheet. Do not sort monsters into a clump just because they rolled together — the order on paper should match the order out loud.</p>
+      <h3>3. Tick the round box every wrap</h3>
+      <p>Rounds are how you measure spell durations and the 1-minute/10-round effects. Tick a box every time the order returns to the top; durations become trivial subtraction.</p>
+      <h3>4. Resolve held and ready actions immediately, not later</h3>
+      <p>A readied action happens the moment its trigger fires — interrupt the current turn, resolve it, continue. If you park it to &ldquo;deal with it after,&rdquo; you will forget, and the player will stop ever readying actions.</p>
+
+      <h2>Common initiative mistakes</h2>
+      <ul>
+        <li><strong>Rolling per monster.</strong> Roll per monster <em>type</em>; the pack of eight wolves gets one score.</li>
+        <li><strong>Skipping delayed/readied participants.</strong> Mark them in the notes column the moment the player declares it — see our tracker's held-action markers.</li>
+        <li><strong>Not writing down lair actions.</strong> Lair actions act at initiative count 20 (losing ties). Write &ldquo;Lair: 20&rdquo; in the roster like a combatant.</li>
+        <li><strong>Erasing HP as numbers.</strong> Tally damage instead; arithmetic is where skipped turns are born.</li>
+      </ul>
+
+      ${dlBox("../../", "initiative-tracker.pdf", "Initiative Tracker", ["22 slots + round strip", "Free, no email", "US Letter &amp; A4"])}
+
+      <h2>Surprise, and why it is not a round</h2>
+      <p>Surprise is a condition on the surprised creatures' first turn, not a bonus round. Compare stealth rolls against passive Perception; surprised creatures cannot move or act on their first turn and cannot take reactions until that turn ends. Then initiative proceeds normally — the surprised wizard still acts on their count, they just lose the first lap.</p>
+
+      <h2>The 60-second recap</h2>
+      <p>Initiative is bookkeeping, but bookkeeping is pacing. A fight where everyone knows whose turn it is feels twice as fast as the same fight with three skipped rogues. Roll grouped, write everything, call on-deck, tick rounds — the rest is monsters making interesting choices.</p>
+    </div></div></section>`,
+    faq: [
+      ["Do you roll initiative once per monster or per group?", "Per monster type/group — all identical creatures share one initiative roll and one turn."],
+      ["What happens on an initiative tie in 5e?", "Higher Dexterity modifier goes first; if still tied, roll off (or let PCs beat NPCs as a common house rule)."],
+      ["When do lair actions happen?", "At initiative count 20, losing ties. Write them into the roster like a combatant so they are never forgotten."],
+      ["Can you ready actions outside combat?", "Readied actions are a combat mechanic. Outside combat, use passive checks or roll initiative the moment tension becomes action."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/what-goes-on-a-dm-screen",
+    title: "What Goes on a DM Screen: The Essential Inserts for D&D 5e",
+    desc: "What to put on your DM screen in D&D 5e — conditions, common DCs, death saves, session names, and the frequency-vs-urgency rule for choosing inserts.",
+    h1: "What Goes on a DM Screen",
+    lead: "A DM screen is prime real estate: four panels facing you that should answer questions in under two seconds. Here is how to choose what earns that space.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <h2>The rule: frequency &times; urgency</h2>
+      <p>Every square inch of screen should host information you look up <strong>often</strong> and <strong>mid-action</strong>. The condition &lsquo;Frightened&rsquo; (every session, mid-attack) earns a panel; the armor table (once per level-up, between sessions) does not. Audit your screen with that one rule and half your clutter disappears.</p>
+
+      <h2>The core four, facing you</h2>
+      <h3>1. Conditions, one line each</h3>
+      <p>Conditions are the most looked-up rule in 5e and the cheapest to summarize. One line of effect, one line of what ends it. Our <a href="../../dm-screen-cheat-sheet/">cheat sheet inserts</a> put all fifteen on a single panel — or use <a href="../../condition-cards/">condition cards</a> if you prefer handing the rule to the player.</p>
+      <h3>2. Common DCs and the difficulty ladder</h3>
+      <p>Very Easy 5 / Easy 10 / Medium 15 / Hard 20 / Very Hard 25 / Nearly Impossible 30 — plus two or three concrete examples per ability so your brain has a hook under pressure (&ldquo;Hard Wisdom: resist a banshee's wail&rdquo;).</p>
+      <h3>3. Death saves, dying, stabilization</h3>
+      <p>Death save DC 10, three successes stabilize, three failures die, damage while at 0 HP = instant failure (crit = two), 1 HP on a natural 20. You will run this rule at the worst possible moment; it belongs on paper.</p>
+      <h3>4. Cover, opportunity attacks, and grappling</h3>
+      <p>+2 / +5 AC &amp; Dex saves for half and three-quarters cover, total cover blocks targeting; opportunity attacks trigger on leaving <em>reach</em> not the 5-foot square; grapple and shove are Athletics vs Athletics/Acrobatics contests, not saves.</p>
+
+      <h2>The outer panels, facing the players</h2>
+      <p>Player-facing space is for shared state: the current <a href="../initiative-tracker/">initiative order</a> clipped where everyone can see it, condition cards folded over the top edge, and — the classic — a name-generation table or common-word glossary for your setting. The outer panels reduce the questions aimed at you; that is their whole job.</p>
+
+      <h2>What to take OFF your screen</h2>
+      <ul>
+        <li><strong>Price lists and trade goods.</strong> Shopping happens between sessions; look it up then.</li>
+        <li><strong>The full armor table.</strong> Once armor is bought, it is on the character sheet.</li>
+        <li><strong>Monster stat blocks you taped up last month.</strong> Screens accrete. Prune monthly.</li>
+        <li><strong>Anything you have genuinely memorized.</strong> Free the space for something you have not.</li>
+      </ul>
+
+      <div class="callout"><strong>Session state belongs on the screen too.</strong> A small sticky note with tonight's NPC names and the three secrets you intend to reveal turns a bland session into a tight one. Our <a href="../../session-notes-template/">session notes template</a> pairs well here: notes inside, rules on the panels.</div>
+
+      <h2>Screens vs. laptops vs. no screen at all</h2>
+      <p>A laptop holds infinite rules but also your dice roller, your music, and your attention. A physical screen answers conditions in two seconds and never pings. No screen at all — the open-table style — maximizes presence and trust, at the cost of memorizing more or prepping index cards. All three styles work; choose deliberately, and stock whichever surface you use with the same core four.</p>
+
+      ${dlBox("../../", "dm-screen-cheat-sheet.pdf", "DM Screen Cheat Sheet", ["5 inserts, all core four", "Free, no email", "US Letter &amp; A4"])}
+
+      <h2>Quick checklist</h2>
+      <ul>
+        <li>All 15 conditions, one line each</li>
+        <li>DC ladder with examples</li>
+        <li>Dying rules and death saves</li>
+        <li>Cover, opportunity attacks, grapple/shove</li>
+        <li>Initiative order visible to players</li>
+        <li>Tonight's names + secrets on a sticky note</li>
+      </ul>
+    </div></div></section>`,
+    faq: [
+      ["What should I put on the inside of my DM screen?", "The core four: conditions, common DCs, death/dying rules, and cover/opportunity attack/grapple rules — everything you look up mid-fight."],
+      ["What goes on the outside of a DM screen?", "Player-facing state: the initiative order, condition cards, and shared references like name tables."],
+      ["How tall should a DM screen be?", "Tall enough to hide your notes, short enough that you still see the players' faces — about 8–10 inches is the sweet spot for standard screens."],
+      ["Do experienced DMs still use screens?", "Yes — for dice fudging options, stat privacy and rule speed. What they do not do is hide behind them: screen for rules, eyes on the table."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+];
+
+/* ---------------- misc pages ---------------- */
+
+const miscPages = [
+  {
+    slug: "about",
+    title: "About Printable DM",
+    desc: "Who makes Printable DM: free, print-first tools for Dungeon Masters, designed around what real tables actually need mid-session.",
+    h1: "About Printable DM",
+    lead: "Print-first tools for Dungeon Masters, built around one idea: the best table reference is the one you can read in two seconds without unlocking anything.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <h2>Why print-first</h2>
+      <p>Every sheet on this site exists because of a real moment at a real table: a skipped turn because HP was in someone's head, an argument about what Frightened does, a campaign that derailed because nobody wrote down the name of the merchant who knows where the vault is. Apps solve these problems too — until the battery dies or the laptop screen becomes a wall between the DM and the players.</p>
+      <p>So we design paper. Good paper: layouts with margins that survive hole punches, columns wide enough for adult handwriting, contrast that survives a fifty-cent office printer.</p>
+      <h2>The deal</h2>
+      <ul>
+        <li>Every PDF is free, for personal use at your table. Print copies for your whole group.</li>
+        <li>No email wall, no account, no watermark, no &ldquo;premium&rdquo; version of the same sheet.</li>
+        <li>Summaries follow the 5e SRD; the sheet is a memory aid, not a replacement for the rules.</li>
+      </ul>
+      <h2>Feedback shapes the toolkit</h2>
+      <p>Want a fillable version, A5 sizing, Pathfinder variants, or a sheet that does not exist yet? <a href="../contact/">Tell us</a> — the roadmap is literally the request list.</p>
+    </div></div></section>`,
+    faq: [],
+    crumbs: [["/", "Home"], [null, "About"]],
+  },
+  {
+    slug: "contact",
+    title: "Contact Printable DM",
+    desc: "Report an issue, suggest a new printable, or tell us how you use the sheets at your table.",
+    h1: "Contact",
+    lead: "Requests, corrections, war stories — all welcome. The roadmap is the request list.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <h2>Request a printable</h2>
+      <p>The fastest channel is the GitHub repository that hosts this project: open an issue with what you need (system, paper size, what the sheet must track) and it joins the roadmap.</p>
+      <div class="dl-box">
+        <div class="info">
+          <strong>Open a request or report a problem</strong>
+          <ul><li>Feature requests, PDF corrections, new systems</li></ul>
+        </div>
+        <a class="btn btn-gold" data-ext="github" href="https://github.com/kylin-feng/printable-dm/issues" target="_blank" rel="noopener">&#128279; GitHub Issues</a>
+      </div>
+      <h2>What we build first</h2>
+      <ul>
+        <li>Anything requested by multiple tables</li>
+        <li>Sheets that fix a real mid-session failure (lost track, forgotten rule, skipped turn)</li>
+        <li>Variants of existing sheets (A5, fillable, other d20 systems)</li>
+      </ul>
+    </div></div></section>`,
+    faq: [],
+    crumbs: [["/", "Home"], [null, "Contact"]],
+  },
+  {
+    slug: "privacy",
+    title: "Privacy Policy — Printable DM",
+    desc: "Printable DM privacy policy: anonymous usage counts only, no cookies, no personal data, no third-party tracking.",
+    h1: "Privacy Policy",
+    lead: "Short version: we count page views anonymously and store nothing about you.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <h2>What we collect</h2>
+      <p>Anonymous, aggregated counts: which page was viewed, which site referred the visit, approximate browser language, and whether the browser is new to the site (a yes/no flag stored in your own browser's local storage). No IP addresses, no fingerprints, no personal data, no advertising identifiers.</p>
+      <h2>Cookies</h2>
+      <p>None. The unique-visitor check uses a single local storage key that never leaves your device.</p>
+      <h2>Third parties</h2>
+      <p>Downloads are served from GitHub Pages together with the site. We run no ads, no analytics platforms, and no social pixels.</p>
+      <h2>Contact</h2>
+      <p>Questions about this policy: <a href="../contact/">see the contact page</a>.</p>
+    </div></div></section>`,
+    faq: [],
+    crumbs: [["/", "Home"], [null, "Privacy"]],
+  },
+];
+
+/* ---------------- render everything ---------------- */
+
+const allUrls = [];
+
+function writePage(filePath, html, urlPath) {
+  mkdirSync(dirname(filePath), { recursive: true });
+  writeFileSync(filePath, html);
+  allUrls.push(urlPath);
+  console.log("wrote", filePath);
+}
+
+/* home */
+writePage("index.html", layout({
+  title: "Printable DM — Free Printable D&D 5e Tools for Dungeon Masters",
+  desc: "Free printable D&D 5e tools: initiative tracker, DM screen cheat sheet, combat tracker, condition cards and session notes. Print-ready PDFs, no email required.",
+  path: "/",
+  crumbs: [],
+  h1Block: "",
+  bodyHTML: homeBody.replace(/href="(?!https?:|#)(guides|assets)/g, 'href="$1'),
+}), "/");
+
+/* products */
+for (const p of productPages) {
+  const base = "../";
+  const pName = (PRODUCTS.find(x => x.slug === p.slug) || {}).name || "Tool";
+  const relCards = p.related.map(slug => {
+    const r = PRODUCTS.find(x => x.slug === slug);
+    return `<article class="card"><div class="icon" aria-hidden="true">${r.icon}</div><h3><a href="../${r.slug}/">${r.name}</a></h3><p>${r.desc}</p></article>`;
+  }).join("\n        ");
+  const bodyHTML = `
+    ${dlBox(base, p.pdf, pName, p.pdfBullets)}
+    <section class="block"><div class="wrap"><div class="article">
+      <h2>What's inside</h2>
+      <ul>${p.inside.map(i => `<li>${i}</li>`).join("\n        ")}</ul>
+      <h2>How to use it</h2>
+      ${p.how}
+      <div class="callout"><strong>Printing tip:</strong> ${p.printTip}</div>
+      <h2>FAQ</h2>
+      <div class="faq">
+        ${p.faq.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join("\n        ")}
+      </div>
+    </div></div></section>
+    <section class="block alt"><div class="wrap">
+      <h2 class="section-title">Pairs well with</h2>
+      <p class="section-sub">Sheets that solve the next problem down the chain.</p>
+      <div class="card-grid">${relCards}</div>
+    </div></section>`;
+
+  writePage(`${p.slug}/index.html`, layout({
+    base,
+    title: p.title,
+    desc: p.desc,
+    path: `/${p.slug}/`,
+    crumbs: [["/", "Home"], [null, p.name]],
+    h1Block: pageHead([["../index.html", "Home"], [null, p.name]], p.h1, p.lead),
+    bodyHTML,
+    faq: p.faq,
+  }), `/${p.slug}/`);
+}
+
+/* guides */
+for (const g of guides) {
+  writePage(`${g.slug}/index.html`, layout({
+    base: "../../",
+    title: g.title,
+    desc: g.desc,
+    path: `/${g.slug}/`,
+    crumbs: g.crumbs,
+    h1Block: pageHead([["../../index.html", "Home"], [null, g.h1]], g.h1, g.lead),
+    bodyHTML: g.body,
+    faq: g.faq,
+  }), `/${g.slug}/`);
+}
+
+/* misc */
+for (const m of miscPages) {
+  writePage(`${m.slug}/index.html`, layout({
+    base: "../",
+    title: m.title,
+    desc: m.desc,
+    path: `/${m.slug}/`,
+    crumbs: m.crumbs,
+    h1Block: pageHead([["../index.html", "Home"], [null, m.h1]], m.h1, m.lead),
+    bodyHTML: m.body,
+    faq: m.faq,
+  }), `/${m.slug}/`);
+}
+
+/* sitemap */
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${allUrls.map(u => `  <url><loc>${SITE}${u === "/" ? "/" : u}</loc><lastmod>${BUILT}</lastmod><changefreq>weekly</changefreq><priority>${u === "/" ? "1.0" : "0.8"}</priority></url>`).join("\n")}
+</urlset>
+`;
+writeFileSync("sitemap.xml", sitemap);
+console.log("wrote sitemap.xml");
+
+/* robots */
+writeFileSync("robots.txt", `User-agent: *
+Allow: /
+Disallow: /stats.html
+
+Sitemap: ${SITE}/sitemap.xml
+`);
+console.log("wrote robots.txt");
+
+/* indexnow key file */
+writeFileSync(`${INDEXNOW_KEY}.txt`, INDEXNOW_KEY);
+console.log("wrote indexnow key file");
+
+console.log(`\nDone: ${allUrls.length} pages.`);

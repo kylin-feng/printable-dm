@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Stats — Printable DM (private)</title>
+<style>
+  :root { --bg:#141210; --card:#1e1a16; --line:#3a3226; --ink:#e9e0cc; --dim:#9c8f74; --gold:#b98a3c; --red:#c25252; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--ink); font:16px/1.55 "Segoe UI",system-ui,sans-serif; padding:28px 20px; }
+  .wrap { max-width:900px; margin:0 auto; }
+  h1 { font-size:1.3rem; margin-bottom:4px; }
+  .sub { color:var(--dim); font-size:.85rem; margin-bottom:22px; }
+  .gate { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:26px; max-width:420px; margin:40px auto; text-align:center; }
+  .gate input { width:100%; padding:10px 12px; border-radius:6px; border:1px solid var(--line); background:#141210; color:var(--ink); font-size:1rem; margin:10px 0; }
+  .gate button, button.refresh { background:var(--gold); border:none; color:#241a08; font-weight:700; padding:10px 20px; border-radius:6px; cursor:pointer; font-size:.95rem; }
+  .kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:26px; }
+  .kpi { background:var(--card); border:1px solid var(--line); border-top:3px solid var(--gold); border-radius:10px; padding:14px 16px; }
+  .kpi .n { font-size:1.9rem; font-weight:700; }
+  .kpi .l { color:var(--dim); font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; }
+  h2 { font-size:1.02rem; color:var(--gold); margin:26px 0 10px; }
+  table { width:100%; border-collapse:collapse; background:var(--card); border-radius:8px; overflow:hidden; font-size:.92rem; }
+  th, td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--line); }
+  th { color:var(--dim); font-weight:600; font-size:.78rem; text-transform:uppercase; }
+  td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .bar { background:var(--gold); height:9px; border-radius:4px; min-width:2px; }
+  .bar.red { background:var(--red); }
+  .updated { color:var(--dim); font-size:.8rem; margin-top:18px; }
+  .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:10px; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>&#127919; Printable DM — traffic dashboard</h1>
+  <p class="sub">Anonymous counters · updated on refresh · data lives at Abacus (pdmlab-7k2m9x)</p>
+  <div id="app"><div class="gate"><p>Enter admin pass to load stats</p><input id="pw" type="password" placeholder="pass phrase"><br><button onclick="tryOpen()">Open dashboard</button></div></div>
+</div>
+<script>
+const NS = "pdmlab-7k2m9x", PASS = "dm-table-2026";
+const GET = k => fetch(`https://abacus.jasoncameron.dev/get/${NS}/${encodeURIComponent(k)}`).then(r => r.ok ? r.json() : {value:0}).then(j => j.value || 0).catch(() => 0);
+
+const PAGES = [["home","Home"],["initiative-tracker","Initiative Tracker"],["dm-screen-cheat-sheet","DM Screen"],["combat-tracker","Combat Tracker"],["condition-cards","Condition Cards"],["session-notes-template","Session Notes"],["guides/how-to-track-initiative","Guide: Initiative"],["guides/what-goes-on-a-dm-screen","Guide: DM Screen"],["about","About"],["contact","Contact"],["privacy","Privacy"]];
+const SRCS = ["google","bing","duckduckgo","reddit","pinterest","facebook","x","youtube","internal","direct"];
+const LANGS = ["en-us","en-gb","en-ca","en-au","de-de","fr-fr","es-es","pt-br","zh-cn","ja"];
+const DLS = ["initiative-tracker","dm-screen-cheat-sheet","combat-tracker","condition-cards","session-notes"];
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function row(name, val, max, red){ const w = max ? Math.round(val/max*100) : 0; return `<tr><td>${esc(name)}</td><td><div class="bar${red?" red":""}" style="width:${w}%"></div></td><td class="num">${val}</td></tr>`; }
+function barTable(rows, red){ const max = Math.max(1, ...rows.map(r=>r[1])); return `<table><tr><th>Dimension</th><th style="width:55%"></th><th class="num">Count</th></tr>${rows.map(r=>row(r[0],r[1],max,red)).join("")}</table>`; }
+
+async function load() {
+  const app = document.getElementById("app");
+  app.innerHTML = "<p style='color:var(--dim)'>Loading counters…</p>";
+  const [uv, pvArr, srcArr, langArr, dlArr, gh] = await Promise.all([
+    GET("uv:all"),
+    Promise.all(PAGES.map(p => GET("pv:" + p[0]))),
+    Promise.all(SRCS.map(s => GET("src:" + s))),
+    Promise.all(LANGS.map(l => GET("lng:" + l))),
+    Promise.all(DLS.map(d => GET("dl:" + d))),
+    GET("ext:github")
+  ]);
+  const pvTotal = pvArr.reduce((a,b)=>a+b,0), dlTotal = dlArr.reduce((a,b)=>a+b,0);
+  const conv = pvTotal ? (dlTotal/pvTotal*100).toFixed(1) : "0.0";
+  const pageRows = PAGES.map((p,i)=>[p[1], pvArr[i]]).sort((a,b)=>b[1]-a[1]);
+  const srcRows = SRCS.map((s,i)=>[s, srcArr[i]]).sort((a,b)=>b[1]-a[1]).concat([["github.com (out)", gh]]);
+  const langRows = LANGS.map((l,i)=>[l, langArr[i]]).sort((a,b)=>b[1]-a[1]);
+  const dlRows = DLS.map((d,i)=>[d, dlArr[i]]).sort((a,b)=>b[1]-a[1]);
+
+  app.innerHTML = `
+    <div class="kpis">
+      <div class="kpi"><div class="n">${pvTotal}</div><div class="l">Page views</div></div>
+      <div class="kpi"><div class="n">${uv}</div><div class="l">Unique visitors</div></div>
+      <div class="kpi"><div class="n">${dlTotal}</div><div class="l">PDF downloads</div></div>
+      <div class="kpi"><div class="n">${conv}%</div><div class="l">Download rate</div></div>
+    </div>
+    <h2>Traffic by page</h2>${barTable(pageRows)}
+    <h2>Traffic by source</h2>${barTable(srcRows)}
+    <h2>Downloads by product</h2>${barTable(dlRows, true)}
+    <h2>Visitor language</h2>${barTable(langRows)}
+    <p class="updated">Loaded ${new Date().toLocaleString()} · <button class="refresh" onclick="load()">Refresh</button></p>`;
+}
+
+function tryOpen(){
+  if (document.getElementById("pw").value === PASS) { sessionStorage.setItem("pdm-stats","1"); load(); }
+  else alert("Wrong pass.");
+}
+if (location.hash === "#" + PASS || sessionStorage.getItem("pdm-stats")) load();
+</script>
+</body>
+</html>
