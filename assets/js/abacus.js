@@ -4,6 +4,9 @@
   var NS = "pdmlab-7k2m9x";
   var ENDPOINT = "https://abacus.jasoncameron.dev/hit/" + NS + "/";
 
+  /* only count production traffic — local previews / previews on other hosts stay clean */
+  if (!/(^|\.)kylin-feng\.github\.io$/.test(location.hostname)) return;
+
   function send(key) {
     try {
       var url = ENDPOINT + encodeURIComponent(key) + "?t=" + Date.now() + Math.random().toString(36).slice(2, 6);
