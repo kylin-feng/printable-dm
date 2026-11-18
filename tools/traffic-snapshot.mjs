@@ -49,7 +49,12 @@ const reportOnly = process.argv.includes("--report");
 
 const prev = fs.existsSync(LOG) ? JSON.parse(fs.readFileSync(LOG, "utf8")) : { date: "-", counters: {} };
 const counters = {};
-await mapLimit(KEYS, 4, async k => { counters[k] = await get(k); });
+/* counters are cumulative monotonic totals: a read below the last snapshot means
+   the Abacus read failed (it returns 0) — clamp to the previous value so an
+   outage never corrupts the baseline or produces negative deltas. */
+await mapLimit(KEYS, 4, async k => {
+  counters[k] = Math.max(await get(k), prev.counters[k] ?? 0);
+});
 
 const delta = k => counters[k] - (prev.counters[k] ?? 0);
 const top = (prefix, n = 5) => KEYS.filter(k => k.startsWith(prefix))
@@ -67,7 +72,13 @@ console.log(`Languages: ${top("lng.").map(([l, v]) => l + "+" + v).join(", ") ||
 console.log(`Cumulative totals: PV ${PAGES.reduce((a, p) => a + counters["pv." + p], 0)} | DL ${DLS.reduce((a, d) => a + counters["dl." + d], 0)} | UV ${counters["uv.all"]}`);
 
 if (!reportOnly) {
-  fs.writeFileSync(LOG, JSON.stringify({ date: new Date().toISOString().slice(0, 10), counters }, null, 2));
-  console.log("snapshot written:", LOG);
+  const prevTotal = Object.entries(prev.counters).filter(([k]) => k.startsWith("pv.")).reduce((a, [, v]) => a + v, 0);
+  const curTotal = KEYS.filter(k => k.startsWith("pv.")).reduce((a, k) => a + counters[k], 0);
+  if (curTotal === 0 && prevTotal > 0) {
+    console.log("WARN: all counters read 0 with a non-zero baseline — Abacus outage suspected, snapshot NOT overwritten.");
+  } else {
+    fs.writeFileSync(LOG, JSON.stringify({ date: new Date().toISOString().slice(0, 10), counters }, null, 2));
+    console.log("snapshot written:", LOG);
+  }
 }
 export { pvTotal, dlTotal };
