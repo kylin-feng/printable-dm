@@ -14,7 +14,7 @@
   /* normalize path: strip trailing "index.html", collapse to page key */
   function pageKey() {
     var p = location.pathname.replace(/\/index\.html?$/, "/").replace(/^.*\/printable-dm/, "").replace(/^\/+/, "");
-    return p ? p.replace(/\/+$/, "") : "home";
+    return (p ? p.replace(/\/+$/, "") : "home").replace(/[^A-Za-z0-9_.-]/g, "-");
   }
 
   /* classify referrer into a small fixed set of source buckets */
@@ -32,7 +32,7 @@
       if (/twitter\.com|x\.com/.test(h)) return "x";
       if (/youtube\.com/.test(h)) return "youtube";
       if (/kylin-feng\.github\.io/.test(h)) return "internal";
-      return "other:" + h.slice(0, 30);
+      return "other-" + h.replace(/[^a-z0-9.-]/g, "").slice(0, 28);
     } catch (e) { return "other"; }
   }
 
@@ -41,14 +41,14 @@
     return l === "unknown" ? l : l.replace(/[^a-z-]/g, "");
   }
 
-  send("pv:" + pageKey());
-  send("src:" + refBucket());
-  send("lng:" + langKey());
+  send("pv." + pageKey());
+  send("src." + refBucket());
+  send("lng." + langKey());
 
   try {
     if (!localStorage.getItem("pdm-uv")) {
       localStorage.setItem("pdm-uv", "1");
-      send("uv:all");
+      send("uv.all");
     }
   } catch (e) { /* private mode */ }
 
@@ -56,7 +56,7 @@
   document.addEventListener("click", function (ev) {
     var a = ev.target.closest && ev.target.closest("a[data-dl],a[data-ext]");
     if (!a) return;
-    if (a.dataset.dl) send("dl:" + a.dataset.dl);
-    if (a.dataset.ext) send("ext:" + a.dataset.ext);
+    if (a.dataset.dl) send("dl." + a.dataset.dl.replace(/[^A-Za-z0-9_.-]/g, "-"));
+    if (a.dataset.ext) send("ext." + a.dataset.ext.replace(/[^A-Za-z0-9_.-]/g, "-"));
   }, true);
 })();
