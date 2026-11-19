@@ -55,8 +55,9 @@ function footer(base) {
         <div>
           <h4>Guides</h4>
           <ul>
-            <li><a href="${base}guides/how-to-track-initiative/">How to Track Initiative in D&D 5e</a></li>
+            <li><a href="${base}guides/how-to-track-initiative/">How to Track Initiative in D&amp;D 5e</a></li>
             <li><a href="${base}guides/what-goes-on-a-dm-screen/">What Goes on a DM Screen</a></li>
+            <li><a href="${base}guides/how-to-run-combat/">How to Run Combat (Cheat Sheet)</a></li>
           </ul>
         </div>
         <div>
@@ -445,6 +446,60 @@ const guides = [
       ["What goes on the outside of a DM screen?", "Player-facing state: the initiative order, condition cards, and shared references like name tables."],
       ["How tall should a DM screen be?", "Tall enough to hide your notes, short enough that you still see the players' faces — about 8–10 inches is the sweet spot for standard screens."],
       ["Do experienced DMs still use screens?", "Yes — for dice fudging options, stat privacy and rule speed. What they do not do is hide behind them: screen for rules, eyes on the table."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/how-to-run-combat",
+    title: "How to Run Combat in D&D 5e: Cheat Sheet for New DMs",
+    desc: "Learn to run D&D 5e combat step by step — surprise, initiative, turn structure, the rules you look up mid-fight, and the habits that keep fights fast. Free cheat sheet PDF.",
+    h1: "How to Run Combat in D&amp;D 5e",
+    lead: "The six-step combat loop, the rules you actually look up mid-fight, and the three habits that separate a smooth fight from a slog — a cheat sheet for new DMs.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <h2>The combat loop in six steps</h2>
+      <ol>
+        <li><strong>Establish positions.</strong> Where is everyone when steel gets drawn? Set the scene before any rolls — it prevents the &ldquo;wait, I was behind the pillar&rdquo; argument.</li>
+        <li><strong>Check for surprise.</strong> Compare the ambushers' group Stealth against the defenders' passive Perception. Surprised creatures skip their actions and reactions on their <em>first turn only</em> — surprise is not a free round.</li>
+        <li><strong>Roll initiative.</strong> Everyone rolls d20 + Dexterity. Identical monsters share one roll and one turn — the single biggest speed-up in the rules. Ties go to higher Dexterity. Write the whole order down before anyone acts; our <a href="../../initiative-tracker/">initiative tracker sheet</a> exists for exactly this.</li>
+        <li><strong>Take turns, top to bottom.</strong> On a turn: move up to speed, take one Action, take one Bonus Action <em>only if a feature grants it</em>, and interact with one object for free. Reactions happen any time they're triggered.</li>
+        <li><strong>Wrap each round.</strong> When the order returns to the top, a round has passed — tick it off. Durations (1 minute = 10 rounds) count down from there.</li>
+        <li><strong>End the fight honestly.</strong> Most monsters flee at half strength or surrender when the tide turns. A fight that ends on morale is a fight that ends interesting.</li>
+      </ol>
+
+      <h2>The rules you look up mid-fight (so learn these first)</h2>
+      <h3>Attack rolls and saving throws</h3>
+      <p>Attack: d20 + ability modifier + proficiency vs the target's AC. A natural 20 always hits and doubles the dice; a natural 1 always misses. Saves: the caster's DC is 8 + proficiency + casting ability; the target rolls d20 + the named save, meeting or beating the DC succeeds.</p>
+      <h3>Death saves</h3>
+      <p>At 0 HP a creature falls unconscious and rolls a DC 10 death save at the start of each of its turns: three successes stabilize, three failures die. Any damage at 0 HP is an automatic failure (a critical hit is two). A natural 20 brings the creature back to 1 HP. This rule fires at the worst moment — keep it on paper, not in memory, with our <a href="../../dm-screen-cheat-sheet/">DM screen cheat sheet</a>.</p>
+      <h3>Cover</h3>
+      <p>Half cover (+2 AC and Dex saves): another creature, furniture, a tree trunk. Three-quarters (+5): an arrow slit, thick fog. Total cover: can't be targeted at all.</p>
+      <h3>Opportunity attacks</h3>
+      <p>Triggered when a hostile <em>leaves your reach</em> — not when it circles around inside it, not on teleportation, not when it's pushed. Disengage prevents it. One reaction per round, so a creature can only punish one exit.</p>
+      <h3>Grappling and shoving</h3>
+      <p>Athletics check contested by the target's Athletics or Acrobatics (their choice). Win the grapple: their speed is 0. Win the shove: knocked prone or pushed 5 feet. No saving throws involved — it's a contest.</p>
+
+      <h2>Three habits that keep fights fast</h2>
+      <p><strong>1. Call the on-deck player.</strong> &ldquo;Aria, you're up — Thorin, you're on deck.&rdquo; Half of combat slowness is players who didn't know their turn was coming. The on-deck call eliminates it.</p>
+      <p><strong>2. Track state on paper, not in your head.</strong> HP as tally marks, concentration as a checkbox, bloodied as a circled name. Round four of a seven-creature fight is where mental tracking collapses — a printed <a href="../../combat-tracker/">combat tracker with HP pips</a> makes round ten as calm as round one.</p>
+      <p><strong>3. Average damage for hordes.</strong> When six goblins hit, don't roll six dice — take the average (it's printed on the stat block) or roll once and apply it to all. Nobody notices; everybody notices the wait you removed.</p>
+
+      <h2>Common new-DM mistakes</h2>
+      <ul>
+        <li><strong>Rolling initiative per monster.</strong> Roll per monster <em>type</em>. The wolf pack shares one initiative.</li>
+        <li><strong>Forgetting lair actions.</strong> They trigger at initiative count 20, losing ties — write &ldquo;LAIR: 20&rdquo; into the roster like a combatant.</li>
+        <li><strong>Stopping the fight to check a rule.</strong> Rule call in ten seconds, write it down, look it up after the session. Momentum is worth more than a perfect ruling.</li>
+        <li><strong>One-note monsters.</strong> Give each monster one tactic: the wolf pack trips, the archer kite, the ogre shoves into hazards. Fights get memorable and you never open the stat block twice.</li>
+      </ul>
+
+      <h2>Your turn (so to speak)</h2>
+      <p>Print a tracker, fold a cheat sheet into your screen, and run the next fight by the loop above. If you want the whole toolkit — initiative tracker, screen inserts, combat tracker and a session recap sheet — start with the <a href="../../dm-screen-cheat-sheet/">cheat sheet inserts</a> and build from there. Roll well.</p>
+    </div></div></section>`,
+    faq: [
+      ["How long should a combat encounter last in 5e?", "Most published fights run 3–5 rounds; at a healthy pace that's 15–30 real minutes. If a routine fight passes 45 minutes, cut monster HP or have reinforcements never arrive."],
+      ["What happens when a creature drops to 0 HP?", "It falls unconscious and rolls death saves (DC 10) each turn: three successes stabilize, three failures die, any damage taken is an automatic failure."],
+      ["Can players delay their turn in 5e?", "There is no delay action in 5e — readied actions (declare action + trigger, resolved as a reaction) are the supported tool."],
+      ["How do I make combat more interesting as a new DM?", "Give every monster one signature tactic, use the environment (hazards, cover, chandeliers), and end fights on morale — monsters flee, surrender, or bargain."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
