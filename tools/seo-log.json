@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "date": "2026-11-19",
+    "action": "heavy: new guide guides/how-to-run-combat (target: dnd combat cheat sheet, how to run combat 5e; 974 words, FAQ schema, 4 product interlinks)",
+    "pagesTouched": [
+      "guides/how-to-run-combat/index.html",
+      "index.html",
+      "tools/build.mjs"
+    ]
+  }
+]
