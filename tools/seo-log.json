@@ -7,5 +7,13 @@
       "index.html",
       "tools/build.mjs"
     ]
+  },
+  {
+    "date": "2026-11-20",
+    "action": "heavy: new guide guides/conditions-explained (target: dnd conditions explained, what does frightened do 5e; 973 words, FAQ schema, 3 product interlinks)",
+    "pagesTouched": [
+      "guides/conditions-explained/index.html",
+      "tools/build.mjs"
+    ]
   }
 ]
