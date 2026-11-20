@@ -58,6 +58,7 @@ function footer(base) {
             <li><a href="${base}guides/how-to-track-initiative/">How to Track Initiative in D&amp;D 5e</a></li>
             <li><a href="${base}guides/what-goes-on-a-dm-screen/">What Goes on a DM Screen</a></li>
             <li><a href="${base}guides/how-to-run-combat/">How to Run Combat (Cheat Sheet)</a></li>
+            <li><a href="${base}guides/conditions-explained/">D&amp;D Conditions Explained</a></li>
           </ul>
         </div>
         <div>
@@ -500,6 +501,56 @@ const guides = [
       ["What happens when a creature drops to 0 HP?", "It falls unconscious and rolls death saves (DC 10) each turn: three successes stabilize, three failures die, any damage taken is an automatic failure."],
       ["Can players delay their turn in 5e?", "There is no delay action in 5e — readied actions (declare action + trigger, resolved as a reaction) are the supported tool."],
       ["How do I make combat more interesting as a new DM?", "Give every monster one signature tactic, use the environment (hazards, cover, chandeliers), and end fights on morale — monsters flee, surrender, or bargain."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/conditions-explained",
+    title: "D&D 5e Conditions Explained: Every Condition in Plain Language",
+    desc: "All 15 D&D 5e conditions explained in plain language — what each does, what ends it, how they stack, and how to run them at the table without page-flipping.",
+    h1: "Every D&amp;D 5e Condition, Explained",
+    lead: "Fifteen conditions, zero page-flipping: what each one does, what ends it, how they stack — and the table habits that make them effortless.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <p>Conditions are the most looked-up rules in 5e &mdash; and the cheapest to master, because each one is two sentences: what it does, and what ends it. Here is the whole set in plain language, grouped by how they actually show up at the table.</p>
+
+      <h2>The perception conditions</h2>
+      <p><strong>Blinded</strong> &mdash; can't see; automatically fails checks that need sight. Attacks against it have advantage; its own attacks have disadvantage. Ends when the cause is removed (fog clears, blindness spell ends).</p>
+      <p><strong>Deafened</strong> &mdash; can't hear; auto-fails checks that need hearing. Rarely decisive, occasionally devastating (that alarm you didn't hear).</p>
+
+      <h2>The social conditions</h2>
+      <p><strong>Charmed</strong> &mdash; can't attack the charmer, and the charmer has advantage on social ability checks with it. Note what it <em>doesn't</em> do: it doesn't grant mind control or bypass violence from other party members. Runs on spell durations.</p>
+      <p><strong>Frightened</strong> &mdash; disadvantage on ability checks and attack rolls while the source of fear is in sight, and it cannot <em>willingly</em> move closer to that source. The "willingly" matters: pushed by thunderwave? Fine. Walking in on its own turn? Not allowed.</p>
+
+      <h2>The action-killers</h2>
+      <p><strong>Incapacitated</strong> &mdash; the root condition: no actions, no reactions. Several heavier conditions include it.</p>
+      <p><strong>Paralyzed</strong> &mdash; incapacitated, can't move or speak, auto-fails Strength and Dex saves, and &mdash; the big one &mdash; any attack from within 5 feet that hits is a <strong>critical hit</strong>. Paralysis plus a rogue in melee is a war crime; use it on your players sparingly.</p>
+      <p><strong>Stunned</strong> &mdash; paralyzed-lite: incapacitated, can't move, auto-fails Str/Dex saves, attacks against it have advantage &mdash; but no auto-crits.</p>
+      <p><strong>Unconscious</strong> &mdash; the dying state: everything from paralyzed, plus it drops what it holds, is unaware of surroundings, and shouts don't wake it. Melee hits within 5 ft auto-crit. Ends by regaining HP or being shaken awake as an action.</p>
+      <p><strong>Petrified</strong> &mdash; turned to stone: incapacitated, resistant to <em>all</em> damage, immune to poison and disease, auto-fails Str/Dex saves. A petrified character can be carried out of a collapsing dungeon by the party &mdash; it's a rescue timer, not a death sentence.</p>
+
+      <h2>The movement-killers</h2>
+      <p><strong>Grappled</strong> &mdash; speed becomes 0. If the grappler moves, it can drag you at half speed. Escapes when the grappler is incapacitated, the effect ends, or you're teleported away. A grappled creature can still attack, cast, and shove.</p>
+      <p><strong>Prone</strong> &mdash; the self-inflicted one: only crawl or spend half your speed to stand. Melee attacks against a prone creature have advantage, ranged have disadvantage, and its own attacks have disadvantage. Dropping prone is free &mdash; tactical against archers, terrible against melee.</p>
+      <p><strong>Restrained</strong> &mdash; the web/restraint state: speed 0, attacks against it have advantage, its attacks have disadvantage, and it has disadvantage on Dexterity saves.</p>
+
+      <h2>The oddballs</h2>
+      <p><strong>Invisible</strong> &mdash; can't be seen without magic; its attacks have advantage, attacks against it have disadvantage. Invisibility does not silence footsteps &mdash; hiding is still a Stealth check.</p>
+      <p><strong>Poisoned</strong> &mdash; disadvantage on attack rolls and ability checks. Simple, common, and a reminder to check whether that poison deals damage or imposes the condition &mdash; they're different effects.</p>
+      <p><strong>Exhaustion (six levels)</strong> &mdash; the ladder: 1) disadvantage on ability checks, 2) speed halved, 3) disadvantage on attacks <em>and</em> saves, 4) hit point maximum halved, 5) speed 0, 6) death. A long rest plus food and drink removes one level; <em>greater restoration</em> (5th level or higher) removes all of them. Exhaustion is the DM's best pacing tool: forced marches, starvation, and drowning all speak it.</p>
+
+      <h2>How conditions stack</h2>
+      <p>Conditions stack freely &mdash; a creature can be grappled, poisoned and frightened at once &mdash; but advantage and disadvantage do not: multiple sources of either still amount to one, and one of each cancels out. Track the conditions, apply the net effect once, move on.</p>
+
+      <h2>Running them without page-flipping</h2>
+      <p>Two habits cover ninety percent of condition play. First: when a condition lands on a character, hand the player the rule &mdash; our <a href="../../condition-cards/">printable condition cards</a> exist for exactly this; slide the card across, they read it, they own it. Second: keep the one-line summary at your screen &mdash; all fifteen fit on two inserts of the <a href="../../dm-screen-cheat-sheet/">DM screen cheat sheet</a>, with each condition's end-condition printed under it.</p>
+      <p>For the fights where three conditions fly at once, the marks row on the <a href="../../combat-tracker/">combat tracker</a> has checkboxes for concentration, poison and bloodied &mdash; tick them as they land, untick as they save.</p>
+    </div></div></section>`,
+    faq: [
+      ["Does poison damage also poison the target?", "Not automatically — a poison effect either deals damage, imposes the poisoned condition, or both, as written in the stat block or spell. Read the effect, don't assume."],
+      ["Can a grappled creature still attack?", "Yes — grappled only sets speed to 0. It can attack, cast spells, shove, and even grapple back."],
+      ["Do two sources of frightened give double disadvantage?", "No. Advantage and disadvantage don't stack — multiple sources still count as one, and they cancel each other out."],
+      ["How do I remove exhaustion quickly?", "One long rest with food and drink removes one level; the greater restoration spell cast at 5th level or higher removes all levels."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
