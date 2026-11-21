@@ -15,5 +15,13 @@
       "guides/conditions-explained/index.html",
       "tools/build.mjs"
     ]
+  },
+  {
+    "date": "2026-11-21",
+    "action": "heavy: new guide guides/session-zero-checklist (target: session zero checklist, dnd session zero; ~950 words, FAQ schema, session-notes interlink)",
+    "pagesTouched": [
+      "guides/session-zero-checklist/index.html",
+      "tools/build.mjs"
+    ]
   }
 ]
