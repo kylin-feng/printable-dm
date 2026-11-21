@@ -59,6 +59,7 @@ function footer(base) {
             <li><a href="${base}guides/what-goes-on-a-dm-screen/">What Goes on a DM Screen</a></li>
             <li><a href="${base}guides/how-to-run-combat/">How to Run Combat (Cheat Sheet)</a></li>
             <li><a href="${base}guides/conditions-explained/">D&amp;D Conditions Explained</a></li>
+            <li><a href="${base}guides/session-zero-checklist/">Session Zero Checklist</a></li>
           </ul>
         </div>
         <div>
@@ -551,6 +552,60 @@ const guides = [
       ["Can a grappled creature still attack?", "Yes — grappled only sets speed to 0. It can attack, cast spells, shove, and even grapple back."],
       ["Do two sources of frightened give double disadvantage?", "No. Advantage and disadvantage don't stack — multiple sources still count as one, and they cancel each other out."],
       ["How do I remove exhaustion quickly?", "One long rest with food and drink removes one level; the greater restoration spell cast at 5th level or higher removes all levels."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/session-zero-checklist",
+    title: "Session Zero Checklist for D&D: Everything to Cover (Free Sheet)",
+    desc: "The complete session zero checklist for D&D campaigns — table rules, safety tools, character creation, scheduling and expectations, plus a free printable recap sheet.",
+    h1: "The Session Zero Checklist",
+    lead: "Everything to cover in the meeting that decides whether your campaign lasts three sessions or thirty — as a working checklist you can run straight down.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <p>Session zero is the meeting before the game: no dice, no combat, just the table agreeing on what campaign they're all signing up for. Skip it and you don't find out until session four that one player expected politics and another expected dungeon crawls. Here is the checklist, in the order that works at a real table.</p>
+
+      <h2>1. The pitch (five minutes)</h2>
+      <p>One paragraph: genre, tone, and the shape of the campaign. &ldquo;Noble intrigue in a collapsing empire, mostly roleplay with set-piece fights, you're all court agents&rdquo; gives everyone a yes/no decision immediately. If a player's face falls, better now than in week three.</p>
+
+      <h2>2. Safety tools (ten minutes)</h2>
+      <p>Pick your set and say it out loud: <strong>lines and veils</strong> (hard bans vs fade-to-black topics), the <strong>X-card</strong> or a simple &ldquo;pause&rdquo; hand signal anyone can use, and an open-door policy — leaving a scene is always fine, no questions asked. This isn't bureaucracy; it's the difference between a tense scene and a bad night.</p>
+
+      <h2>3. Table rules (ten minutes)</h2>
+      <ul>
+        <li><strong>Rules authority:</strong> DM rulings stand mid-session, rules debated after — say it explicitly.</li>
+        <li><strong>Table tech:</strong> phones okay for dice apps? Laptops? PvP — in or out? (Most tables: out.)</li>
+        <li><strong>Attendance:</strong> missing players' characters become background NPCs; no XP penalty.</li>
+        <li><strong>Scheduling:</strong> cadence (weekly/biweekly), day, start time, and who chases stragglers — agree on the chase mechanism now, while everyone likes each other.</li>
+      </ul>
+
+      <h2>4. Character creation (thirty minutes)</h2>
+      <p>Decide as a table: point buy or rolled stats (rolled in front of witnesses), allowed books, and <strong>the party composition conversation</strong> — not &ldquo;we need a healer&rdquo; but &ldquo;what does this group look like?&rdquo; Two warlocks and a bard can work; four loner edgelords with no reason to cooperate cannot, and session zero is where you say so. Require every player to answer three questions: why are you here, whom do you already know at this table, and what do you want from the campaign?</p>
+
+      <h2>5. Expectations and hooks (ten minutes)</h2>
+      <p>Each player states one thing they want to see (a heist, a redemption arc, dragons) and one thing they'd rather avoid. Write these down — they're your prep priorities for the next three months. Then seed the inter-character bonds: rivals, siblings, debtors, war buddies.</p>
+
+      <h2>6. Logistics (five minutes)</h2>
+      <p>Where do you play, who hosts, snacks rotation, and how the group communicates between sessions (group chat norms: scheduling yes, rules-lawyering no). Decide what happens when someone can't make it — quorum rules, cancellation cutoff time.</p>
+
+      <h2>What you walk out with</h2>
+      <ul>
+        <li>A campaign pitch everyone said yes to</li>
+        <li>Safety tools agreed and understood</li>
+        <li>Characters built with bonds between them</li>
+        <li>A schedule with a real cadence</li>
+        <li>Each player's wants-and-avoids list</li>
+      </ul>
+      <p>Write all of it on one sheet and keep it in your campaign binder — along with a <a href="../../session-notes-template/">session notes template</a> for every session that follows. The session zero sheet is page one of your campaign's memory.</p>
+
+      <h2>Common session zero mistakes</h2>
+      <p><strong>Treating it as character creation night.</strong> Building sheets takes the whole session and nothing else gets covered — pre-build or budget strict time. <strong>Skipping safety tools because &ldquo;we're all friends.&rdquo;</strong> Friends especially deserve the shortcut. <strong>No written record.</strong> The agreement you don't write down is the agreement that's re-litigated at session six. And <strong>skipping session zero entirely for a one-shot</strong> — even a one-shot deserves the ten-minute version: pitch, lines and veils, party bonds.</p>
+    </div></div></section>`,
+    faq: [
+      ["How long should a session zero take?", "One to two hours for the full checklist; a one-shot needs only the ten-minute version — pitch, safety tools and party bonds."],
+      ["Do you play any D&D in session zero?", "Usually no combat and no plot — but a five-minute 'how does your character know the others' round doubles as warm-up roleplay."],
+      ["What if a player realizes the campaign isn't for them?", "That's session zero doing its job — better a graceful exit before session one than a ghost seat by session three."],
+      ["Where do I write all this down?", "One sheet in your campaign binder; pair it with a session notes template so every following session gets the same treatment."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
