@@ -23,5 +23,13 @@
       "guides/session-zero-checklist/index.html",
       "tools/build.mjs"
     ]
+  },
+  {
+    "date": "2026-11-22",
+    "action": "heavy: new guide guides/metal-vs-resin-dice (commercial intent; 840 words, FAQ schema, 4 Dice Goblin shop links — first guide-to-shop funnel)",
+    "pagesTouched": [
+      "guides/metal-vs-resin-dice/index.html",
+      "tools/build.mjs"
+    ]
   }
 ]
