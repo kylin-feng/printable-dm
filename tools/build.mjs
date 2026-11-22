@@ -60,6 +60,7 @@ function footer(base) {
             <li><a href="${base}guides/how-to-run-combat/">How to Run Combat (Cheat Sheet)</a></li>
             <li><a href="${base}guides/conditions-explained/">D&amp;D Conditions Explained</a></li>
             <li><a href="${base}guides/session-zero-checklist/">Session Zero Checklist</a></li>
+            <li><a href="${base}guides/metal-vs-resin-dice/">Metal vs Resin Dice</a></li>
           </ul>
         </div>
         <div>
@@ -606,6 +607,59 @@ const guides = [
       ["Do you play any D&D in session zero?", "Usually no combat and no plot — but a five-minute 'how does your character know the others' round doubles as warm-up roleplay."],
       ["What if a player realizes the campaign isn't for them?", "That's session zero doing its job — better a graceful exit before session one than a ghost seat by session three."],
       ["Where do I write all this down?", "One sheet in your campaign binder; pair it with a session notes template so every following session gets the same treatment."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/metal-vs-resin-dice",
+    title: "Metal vs Resin Dice: Which Should You Buy? (Honest Guide)",
+    desc: "Metal vs resin D&D dice compared honestly: weight, rolling, durability, price, table safety and which to buy first — from weight specs to rolling etiquette.",
+    h1: "Metal vs Resin Dice: Which Should You Buy?",
+    lead: "The honest comparison every dice buyer deserves — weight, feel, durability, price and table safety — plus which set to buy first when you can only buy one.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <p>Every tabletop player hits this question within a year of the hobby, and the internet's answer is usually &ldquo;buy both&rdquo; — which is technically correct and completely unhelpful. Here is the actual comparison, number by number.</p>
+
+      <h2>The honest numbers</h2>
+      <table>
+        <tr><th></th><th>Metal dice</th><th>Resin dice</th></tr>
+        <tr><td>Weight (7-piece set)</td><td>120&ndash;160 g</td><td>25&ndash;45 g</td></tr>
+        <tr><td>Typical price</td><td>$20&ndash;$60</td><td>$8&ndash;$25</td></tr>
+        <tr><td>Drop test</td><td>Survives; dents soft tables</td><td>Chips if rolled off tables repeatedly</td></tr>
+        <tr><td>Balance</td><td>Solid castings roll true</td><td>Good sets roll true; cheap sets can bias</td></tr>
+        <tr><td>Table safety</td><td>Needs a tray, always</td><td>Safe on most surfaces</td></tr>
+        <tr><td>Maintenance</td><td>Keep dry, wipe occasionally</td><td>None</td></tr>
+      </table>
+
+      <h2>What metal actually feels like</h2>
+      <p>A zinc-alloy d20 weighs about what an entire resin set does. That weight is the entire product: the <em>thunk</em> when it lands, the authority when it rolls, the small ritual of shaking a fistful of cold metal before a save that matters. The downsides are equally real — metal dice will mark a bare wooden table (a folding tray is not optional, it is part of the purchase), they are loud in shared spaces, and a full metal set costs two to three times its resin twin.</p>
+
+      <h2>What resin does better</h2>
+      <p>Modern resin sets come with sharp edges, deep layered colors and glitter pours that metal cannot imitate at any price — the visual variety is unmatched. They're quiet, light, table-friendly, and cheap enough to own one per character (which is, let's be honest, how this works). Two honest caveats: very cheap resin sets can arrive with visible mold seams or off-center numbers, and sharp-edged sets chip if you roll them off the table every session. Buy from shops that hand-inspect sets before shipping — it matters more than the material does.</p>
+
+      <h2>The balance question, answered</h2>
+      <p>Players ask whether metal dice roll &ldquo;fairer.&rdquo; Both materials roll true when manufactured properly; neither material is inherently more random. What actually biases dice is air bubbles inside resin (visible in cheap sets) and worn plating on very old metal dice. If you can see through a die and spot a bubble near the core, that die belongs in the villain jar.</p>
+
+      <h2>So which do you buy first?</h2>
+      <p><strong>If you play mostly at home:</strong> start metal. The tray comes with the lifestyle, and the weight genuinely changes how rolling feels. Our friends at <a href="https://kylin-feng.github.io/dice-goblin-shop/products/metal-dice-bundle/" target="_blank" rel="noopener">Dice Goblin bundle a metal set with a folding tray and pouch</a> for about the price most shops charge for the dice alone.</p>
+      <p><strong>If you play at stores, cons or other people's tables:</strong> start resin — quiet, light, forgiving — and upgrade to metal once you know your table manners won't get you disinvited.</p>
+      <p><strong>If you're buying a gift:</strong> metal, always. Nobody unwraps zinc alloy and stays calm.</p>
+
+      <h2>Care, briefly</h2>
+      <ul>
+        <li>Metal: dry storage, occasional soft-cloth wipe, never leave a set in a damp bag (plating dislikes long baths).</li>
+        <li>Resin: keep them off direct sunlight for months at a time (yellowing), and away from the edge of the table.</li>
+        <li>Both: roll in a tray. A <a href="https://kylin-feng.github.io/dice-goblin-shop/products/folding-dice-tray/" target="_blank" rel="noopener">snapping folding tray</a> costs less than replacing one d20 you loved.</li>
+      </ul>
+
+      <h2>The real answer</h2>
+      <p>The internet was right: eventually you own both — resin for travel and tavern nights, metal for the boss fight. But the order matters less than buying a set someone inspected before it shipped. Roll well.</p>
+    </div></div></section>`,
+    faq: [
+      ["Are metal dice worth the extra cost?", "If you play weekly at home — yes; the feel and durability justify it. Casual or travel players get 90% of the joy from a good resin set at a third of the price."],
+      ["Do metal dice damage tables?", "On bare wood they can dent and scratch — that's why every metal set should be paired with a rolling tray, which most bundles include."],
+      ["Are resin dice fair or balanced?", "Quality resin sets roll as true as metal; the risk is air bubbles in cheap sets, which you can usually spot by holding a die up to the light."],
+      ["What dice should a beginner buy first?", "A resin 7-piece set plus a folding tray — quiet, table-safe and inexpensive — then add a metal set once you know how often you'll actually play."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
