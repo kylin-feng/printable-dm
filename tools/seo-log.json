@@ -31,5 +31,13 @@
       "guides/metal-vs-resin-dice/index.html",
       "tools/build.mjs"
     ]
+  },
+  {
+    "date": "2026-11-23",
+    "action": "heavy: new guide guides/dm-prep-checklist (target: dm prep, how to prep a dnd session; 792 words, FAQ schema, 4 product interlinks)",
+    "pagesTouched": [
+      "guides/dm-prep-checklist/index.html",
+      "tools/build.mjs"
+    ]
   }
 ]
