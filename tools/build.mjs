@@ -61,6 +61,7 @@ function footer(base) {
             <li><a href="${base}guides/conditions-explained/">D&amp;D Conditions Explained</a></li>
             <li><a href="${base}guides/session-zero-checklist/">Session Zero Checklist</a></li>
             <li><a href="${base}guides/metal-vs-resin-dice/">Metal vs Resin Dice</a></li>
+            <li><a href="${base}guides/dm-prep-checklist/">DM Prep in 30 Minutes</a></li>
           </ul>
         </div>
         <div>
@@ -660,6 +661,54 @@ const guides = [
       ["Do metal dice damage tables?", "On bare wood they can dent and scratch — that's why every metal set should be paired with a rolling tray, which most bundles include."],
       ["Are resin dice fair or balanced?", "Quality resin sets roll as true as metal; the risk is air bubbles in cheap sets, which you can usually spot by holding a die up to the light."],
       ["What dice should a beginner buy first?", "A resin 7-piece set plus a folding tray — quiet, table-safe and inexpensive — then add a metal set once you know how often you'll actually play."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/dm-prep-checklist",
+    title: "DM Prep: How to Prepare a D&D Session in 30 Minutes",
+    desc: "A 30-minute DM prep routine that covers scene list, stat blocks, maps, names and a recap plan — prep less, improvise better, and never blank mid-session again.",
+    h1: "DM Prep in 30 Minutes",
+    lead: "The session-prep routine that ends the 3 a.m. panic: five blocks, thirty minutes, and a game that survives whatever your players decide to do.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <p>Over-prepping is the most common DM failure mode: forty hours of worldbuilding, zero hours rehearsing what happens when the players ignore it. The 30-minute routine below assumes you already know where the campaign is going — it preps <em>this session</em>, not the setting.</p>
+
+      <h2>Minute 0&ndash;5: The recap hook</h2>
+      <p>Reread last session's <a href="../../session-notes-template/">notes sheet</a> and write one sentence that starts tonight's game: the unfinished threat, the promised meeting, the cliffhanger. Reading this aloud is your cold open — it re-immerses the table in forty seconds and tells you what the first scene is.</p>
+
+      <h2>Minute 5&ndash;15: The scene list</h2>
+      <p>Write three to five scenes you expect, one line each: &ldquo;1. Ambush on the road &mdash; wolves, morale break at half. 2. Arrival at Millbrook, innkeeper Greta wants help. 3. The mill at night &mdash; smugglers, a bargained fight.&rdquo; This is the single highest-value prep artifact: not a script, just likely destinations. When players zag, you keep the list and change the route.</p>
+      <p>For each fight scene, note the stat blocks you'll need and print or bookmark them. Pre-roll nothing else.</p>
+
+      <h2>Minute 15&ndash;20: Names and faces</h2>
+      <p>Ten NPC names on an index card, with one-word hooks (Greta &mdash; owes a debt; Captain Vole &mdash; vain, bribable). The difference between a living town and cardboard is whether people have names when players ask. Any name works; consistency is what matters — write down every name you improvise during the game too.</p>
+
+      <h2>Minute 20&ndash;25: The battle math</h2>
+      <p>For the likely fight: how many enemies, when they arrive, and what makes them quit. Fill a <a href="../../combat-tracker/">combat tracker</a> in advance &mdash; name blocks, HP pips, initiative for monster groups you can pre-roll. Six goblins pre-blocked saves ninety seconds of table setup, and ninety seconds of setup is where combats go to die.</p>
+
+      <h2>Minute 25&ndash;30: The safety net</h2>
+      <p>Three improv anchors for when players ignore your scene list: a complication (the town bell rings mid-negotiation), a person (someone from a PC's backstory walks in), and a place (the door they haven't opened). You will not need all three; needing one of them is certain. Fold the DM screen inserts &mdash; conditions and DCs from the <a href="../../dm-screen-cheat-sheet/">cheat sheet</a> &mdash; and you're done.</p>
+
+      <h2>What this routine deliberately skips</h2>
+      <ul>
+        <li><strong>Full dungeon mapping.</strong> Sketch rooms as needed; players imagine more than any map shows.</li>
+        <li><strong>Dialogue scripts.</strong> Know what an NPC <em>wants</em>, not what they say.</li>
+        <li><strong>Loot tables.</strong> Decide treasure after you see what the fight felt like.</li>
+        <li><strong>&ldquo;Balanced&rdquo; encounters.</strong> Balance at the table via monster morale and reinforcements, not in the spreadsheet.</li>
+      </ul>
+
+      <h2>After the session (five minutes)</h2>
+      <p>Fill the <a href="../../session-notes-template/">session notes sheet</a> while players recap out loud — party status, NPCs met, loot, and three hooks for next time. Those five minutes are next week's minute 0&ndash;5 already done.</p>
+
+      <h2>Why 30 minutes works</h2>
+      <p>Short prep forces prioritization onto the things that actually break sessions — blanking on names, fumbling combat setup, no plan for the zag — instead of the things that feel productive but never come up. Prep the seams, improvise the middle, and trust the table to fill it with something better than you planned anyway.</p>
+    </div></div></section>`,
+    faq: [
+      ["How long should DM prep take per session?", "For most sessions, 30 focused minutes plus a 5-minute post-session recap beats long prep sprees — short prep prioritizes what actually breaks sessions mid-game."],
+      ["What should a new DM prepare first?", "A scene list, the stat blocks for one likely fight, ten NPC names, and one recap sentence to open the session. Everything else can be improvised."],
+      ["How do I prep when I don't know what players will do?", "Prep destinations, not routes: 3–5 likely scenes plus three improv anchors (a complication, a person, a place) to deploy when players zag."],
+      ["Should I pre-roll monster initiative?", "Yes — rolling initiative for monster groups in advance and pre-blocking a combat tracker saves the table-setup stall where most combats lose energy."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
