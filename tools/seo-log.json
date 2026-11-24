@@ -39,5 +39,13 @@
       "guides/dm-prep-checklist/index.html",
       "tools/build.mjs"
     ]
+  },
+  {
+    "date": "2026-11-24",
+    "action": "heavy: new guide guides/how-to-run-a-one-shot (target: how to run a one shot, dnd one shot ideas; ~850 words, FAQ schema, 4 interlinks)",
+    "pagesTouched": [
+      "guides/how-to-run-a-one-shot/index.html",
+      "tools/build.mjs"
+    ]
   }
 ]
