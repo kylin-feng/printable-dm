@@ -62,6 +62,7 @@ function footer(base) {
             <li><a href="${base}guides/session-zero-checklist/">Session Zero Checklist</a></li>
             <li><a href="${base}guides/metal-vs-resin-dice/">Metal vs Resin Dice</a></li>
             <li><a href="${base}guides/dm-prep-checklist/">DM Prep in 30 Minutes</a></li>
+            <li><a href="${base}guides/how-to-run-a-one-shot/">How to Run a One-Shot</a></li>
           </ul>
         </div>
         <div>
@@ -709,6 +710,49 @@ const guides = [
       ["What should a new DM prepare first?", "A scene list, the stat blocks for one likely fight, ten NPC names, and one recap sentence to open the session. Everything else can be improvised."],
       ["How do I prep when I don't know what players will do?", "Prep destinations, not routes: 3–5 likely scenes plus three improv anchors (a complication, a person, a place) to deploy when players zag."],
       ["Should I pre-roll monster initiative?", "Yes — rolling initiative for monster groups in advance and pre-blocking a combat tracker saves the table-setup stall where most combats lose energy."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/how-to-run-a-one-shot",
+    title: "How to Run a One-Shot in D&D 5e: A Complete Guide",
+    desc: "How to run a great D&D one-shot: structure, pregenerated characters, the three-act shape, pacing, and the mistakes that kill single-session games.",
+    h1: "How to Run a One-Shot",
+    lead: "One session, complete story, no campaign commitment — the complete guide to structuring, pacing and landing a single-night adventure.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <p>One-shots are the hardest format in DMing: you get one evening to introduce characters, build tension, and land an ending — with no next session to fix what went wrong. Here's the structure that consistently works.</p>
+
+      <h2>Start with pregenerated characters</h2>
+      <p>Character creation eats 90 minutes of your only session. Bring 5&ndash;6 pregen characters with one hook each baked in — &ldquo;you owe the innkeeper money,&rdquo; &ldquo;you've hunted this cult before.&rdquo; Players pick in thirty seconds, and every hook is a lever you can pull later. Let players reskin names and pronouns; ownership matters, stats don't.</p>
+
+      <h2>The three-act one-shot shape</h2>
+      <p><strong>Act 1 (45 min): a strong opening scene.</strong> Start in motion — the tavern is already on fire, the auction is already going wrong. Introduce the problem, the stakes, and one memorable NPC in a single scene, then let the players commit.</p>
+      <p><strong>Act 2 (90 min): investigation plus one fight.</strong> Three clues pointing at the truth (three, because players will miss one and misread another), one combat that teaches the villains' trick, and a discovery that recontextualizes the opening — the kind stranger from scene one was behind it all along.</p>
+      <p><strong>Act 3 (45 min): the climax and a real ending.</strong> The showdown, the choice that matters, and — this is what separates one-shots from campaign filler — an epilogue for each character. Two sentences each: what the rogue did with the reward, where the paladin rode next. Endings are why people remember one-shots.</p>
+
+      <h2>Pacing rules that save one-shots</h2>
+      <ul>
+        <li><strong>Hard scene cuts.</strong> When a scene's point is made, cut — no walking out of buildings, no shopping. "You emerge into the noon market" is a legitimate transition.</li>
+        <li><strong>One fight minimum, two maximum.</strong> A one-shot with three fights is a dungeon crawl wearing a costume.</li>
+        <li><strong>Failure advances the plot.</strong> If the players lose the Act 2 fight, the villains accelerate their plan — the story moves either way. Never end a scene on a dead stop.</li>
+        <li><strong>The clock is real.</strong> Put a visible timer in the fiction — dawn, the tide, the eclipse. One-shots with clocks end on time; one-shots without them end at 2 a.m. in the middle of a corridor.</li>
+      </ul>
+
+      <h2>Prep for a one-shot: one hour, not ten</h2>
+      <p>Use the <a href="../../dm-prep-checklist/">30-minute prep routine</a> with one-shot adjustments: the scene list is your three acts, the NPC names double as epilogue material, and the battle math covers your two fights. Fill a <a href="../../combat-tracker/">combat tracker</a> per fight in advance — table setup is where single-session momentum dies. The <a href="../../session-notes-template/">session notes sheet</a> still applies: even one-shots deserve a recap of which endings you actually delivered, because players will ask to revisit these characters.</p>
+
+      <h2>The ten-minute session zero still applies</h2>
+      <p>Even for one night: pitch the tone (heist comedy vs folk horror are different evenings), run lines-and-veils in one sentence, and ask each player what their character wants from tonight. The lightweight version of the <a href="../../session-zero-checklist/">session zero checklist</a> takes ten minutes and doubles the emotional payoff.</p>
+
+      <h2>Where one-shots come from</h2>
+      <p>Steal structures, not plots: any heist movie, any locked-room mystery, any western standoff. A one-shot built on "the party must escort X to Y before Z" is prep-free — the story writes itself from what the players do en route. If you're stuck, open with the reward and end with the bill coming due.</p>
+    </div></div></section>`,
+    faq: [
+      ["How long should a D&D one-shot be?", "Plan for 3–4 hours: a 45-minute opening, 90-minute middle with one fight, and a 45-minute climax plus character epilogues."],
+      ["Should players make characters for a one-shot?", "Use pregenerated characters with built-in hooks — character creation eats a third of your only session. Let players rename and reskin them."],
+      ["What makes a good one-shot story?", "A strong opening scene, three clues to the truth, one twist that recontextualizes the opening, and a real ending with an epilogue per character."],
+      ["Can a one-shot become a campaign?", "Yes — keep the notes sheet, deliver satisfying endings anyway, and if players ask to return, you already have a world they care about."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
