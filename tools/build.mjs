@@ -63,6 +63,7 @@ function footer(base) {
             <li><a href="${base}guides/metal-vs-resin-dice/">Metal vs Resin Dice</a></li>
             <li><a href="${base}guides/dm-prep-checklist/">DM Prep in 30 Minutes</a></li>
             <li><a href="${base}guides/how-to-run-a-one-shot/">How to Run a One-Shot</a></li>
+            <li><a href="${base}guides/what-dice-do-you-need/">What Dice Do You Need?</a></li>
           </ul>
         </div>
         <div>
@@ -753,6 +754,54 @@ const guides = [
       ["Should players make characters for a one-shot?", "Use pregenerated characters with built-in hooks — character creation eats a third of your only session. Let players rename and reskin them."],
       ["What makes a good one-shot story?", "A strong opening scene, three clues to the truth, one twist that recontextualizes the opening, and a real ending with an epilogue per character."],
       ["Can a one-shot become a campaign?", "Yes — keep the notes sheet, deliver satisfying endings anyway, and if players ask to return, you already have a world they care about."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/what-dice-do-you-need",
+    title: "What Dice Do You Need to Play D&D? (7-Dice Set Explained)",
+    desc: "Exactly what dice you need for D&D 5e: the 7-dice set explained die by die, what each is rolled for, how many sets to own, and cheap vs premium options.",
+    h1: "What Dice Do You Need to Play D&amp;D?",
+    lead: "The seven-dice set explained die by die — what each one rolls, why the d20 rules the game, and what to actually buy first.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <p>D&D uses seven dice shapes, and you'll recognize six of them by dinner time. Here's the whole toolkit, what each die is actually for, and what to buy when you're starting out.</p>
+
+      <h2>The d20 — the engine of the game</h2>
+      <p>The twenty-sided die is the star: attack rolls, ability checks, saving throws and death saves all start with a d20. When someone says &ldquo;roll a perception check&rdquo; or &ldquo;does a 17 hit,&rdquo; this is the die. If you buy one nice die, make it this one — it touches the table more than the other six combined.</p>
+
+      <h2>The rest of the set</h2>
+      <ul>
+        <li><strong>d12</strong> — big hits: greataxes, the nastier dragon breaths. Rarer, beloved.</li>
+        <li><strong>d10</strong> — weapons like longswords and fireballs. Two d10s (one marked in tens) roll d100 for wild-magic tables.</li>
+        <li><strong>d8</strong> — the workhorse damage die: longswords at one hand, cantrips that grew up.</li>
+        <li><strong>d6</strong> — everyone's favorite: shortswords, firebolt, hit points at first level. You'll want several; scavenge from old board games in the meantime.</li>
+        <li><strong>d4</strong> — daggers and magic missiles. Stepping on one is a rite of passage; store them point-down.</li>
+        <li><strong>d% (percentile)</strong> — the tens-marker d10. Rolls d100 with its sibling for random tables and wild magic.</li>
+      </ul>
+
+      <h2>How many dice do you actually need?</h2>
+      <p>Technically: one full set shared by the table. Practically: <strong>one set per player</strong> plus a communal pile of d6s. Rolling your own dice is half the tactile joy of the game, and sharing one d20 across five players is how arguments about lucky rolls start. The DM benefits most from extras — rolling 8d6 for a fireball one die at a time is a war crime against pacing.</p>
+
+      <h2>What should your first set be?</h2>
+      <p>A complete 7-piece set costs less than a pizza. Start with any set you'll recognize on a cluttered table — high-contrast numbers, a color nobody else at the table owns. If you want the one-purchase answer: a <a href="https://kylin-feng.github.io/dice-goblin-shop/products/metal-dice-bundle/" target="_blank" rel="noopener">metal set bundled with a folding tray</a> covers dice, rolling surface and storage in one box, and the weight genuinely changes how rolling feels. Prefer to start cheaper? A <a href="https://kylin-feng.github.io/dice-goblin-shop/products/resin-dice-set/" target="_blank" rel="noopener">sharp-edged resin set</a> looks premium at a third of the price. The full material comparison is in our <a href="../metal-vs-resin-dice/">metal vs resin dice guide</a>.</p>
+
+      <h2>Rolling etiquette in sixty seconds</h2>
+      <ul>
+        <li>Roll in a tray or on a dice mat — bare tables dent (metal) and chips (sharp resin).</li>
+        <li>Roll where everyone can see. Hidden rolls are the GM's privilege, not the players'.</li>
+        <li>A die that falls off the table didn't count. Everyone knows this. It's fine.</li>
+        <li>Cocking against a minis or pencil? Re-roll it, or your table's chosen tyrant decides forever.</li>
+      </ul>
+
+      <h2>Do you need specialty dice?</h2>
+      <p>No. Advantage dice, hit-dice trackers and the thousand novelty shapes are fun, not required. The game runs on seven shapes and has for fifty years. Buy the oddities after you know which dice you actually reach for — most players discover they need more d6s and a better d20, in that order.</p>
+    </div></div></section>`,
+    faq: [
+      ["How many dice do I need to start playing D&D?", "One 7-piece set per player is the comfortable minimum, plus a handful of extra d6s for damage rolls and hit points at the table."],
+      ["What is the d20 used for in D&D?", "Attack rolls, ability checks and saving throws — the d20 decides success or failure for nearly every action in the game."],
+      ["Can I play D&D with regular dice from other games?", "Yes — scavenged d6s plus any full set work fine; the shapes matter, the aesthetics don't."],
+      ["What's the difference between the d10 and the percentile d%?", "The d% is a d10 marked in tens (00–90); rolled together with a normal d10 it produces 1–100 for random tables and wild magic."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
