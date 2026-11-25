@@ -47,5 +47,13 @@
       "guides/how-to-run-a-one-shot/index.html",
       "tools/build.mjs"
     ]
+  },
+  {
+    "date": "2026-11-25",
+    "action": "heavy: new guide guides/what-dice-do-you-need (beginner buying intent; 781 words, FAQ schema, 4 shop links + metal-vs-resin interlink)",
+    "pagesTouched": [
+      "guides/what-dice-do-you-need/index.html",
+      "tools/build.mjs"
+    ]
   }
 ]
