@@ -64,6 +64,7 @@ function footer(base) {
             <li><a href="${base}guides/dm-prep-checklist/">DM Prep in 30 Minutes</a></li>
             <li><a href="${base}guides/how-to-run-a-one-shot/">How to Run a One-Shot</a></li>
             <li><a href="${base}guides/what-dice-do-you-need/">What Dice Do You Need?</a></li>
+            <li><a href="${base}guides/milestone-vs-xp-leveling/">Milestone vs XP Leveling</a></li>
           </ul>
         </div>
         <div>
@@ -802,6 +803,50 @@ const guides = [
       ["What is the d20 used for in D&D?", "Attack rolls, ability checks and saving throws — the d20 decides success or failure for nearly every action in the game."],
       ["Can I play D&D with regular dice from other games?", "Yes — scavenged d6s plus any full set work fine; the shapes matter, the aesthetics don't."],
       ["What's the difference between the d10 and the percentile d%?", "The d% is a d10 marked in tens (00–90); rolled together with a normal d10 it produces 1–100 for random tables and wild magic."],
+    ],
+    crumbs: [["/", "Home"], [null, "Guides"]],
+  },
+  {
+    slug: "guides/milestone-vs-xp-leveling",
+    title: "Milestone vs XP Leveling in D&D 5e: Which Should You Use?",
+    desc: "Milestone vs XP leveling in D&D 5e compared honestly: bookkeeping, player motivation, pacing control, session-zero implications and a hybrid most tables end up using.",
+    h1: "Milestone vs XP Leveling",
+    lead: "The first big rules decision most new DMs face, answered honestly: what each system rewards, what each one costs you, and the hybrid most tables end up using anyway.",
+    body: `
+    <section class="block"><div class="wrap"><div class="article">
+      <p>Every DM hits this choice in week two: track experience points, or level the party when it feels right? The internet treats this as a holy war; it's actually a trade-off with a boring, correct answer depending on your table.</p>
+
+      <h2>What XP actually does</h2>
+      <p>XP is a reward <em>signal</em>: kill monsters, complete quests, get stronger on a visible schedule. Players can see progress, plan their next level, and feel the meter filling. The published adventure books assume it. The costs are equally real: you'll do arithmetic every session, players optimize toward whatever earns XP (and combat earns most of it, which quietly discourages sneaking past the ogre), and a missed session or two leaves a player literally behind.</p>
+
+      <h2>What milestone leveling actually does</h2>
+      <p>Milestone (also called story-based) leveling puts the DM in charge: the party levels when the story says they should — after the arc's boss, before descending to the dungeon's second level. Benefits: zero bookkeeping, perfect pacing control, no incentive distortion (talking your way past the ogre earns exactly what killing it would). Costs: progress stops being visible, players lose the "almost there" feeling, and a DM who forgets to level the party for six sessions has a mutiny brewing that XP would have surfaced automatically.</p>
+
+      <h2>The honest comparison</h2>
+      <table>
+        <tr><th></th><th>XP</th><th>Milestones</th></tr>
+        <tr><td>Bookkeeping</td><td>Per-session tracking</td><td>None</td></tr>
+        <tr><td>Reward visibility</td><td>High — a filling meter</td><td>Low — levels "happen"</td></tr>
+        <tr><td>Pacing control</td><td>System-driven</td><td>DM-driven, total</td></tr>
+        <tr><td>Rewards combat over stealth?</td><td>Quietly, yes</td><td>No</td></tr>
+        <tr><td>Fits published adventures?</td><td>As written</td><td>Perfectly</td></tr>
+        <tr><td>Skill floor</td><td>Low</td><td>Requires pacing judgment</td></tr>
+      </table>
+
+      <h2>Which should your table use?</h2>
+      <p><strong>New DM:</strong> milestones, without hesitation — you're already juggling initiative, rules and plot; drop the spreadsheet. <strong>Sandbox campaign:</strong> XP — an open world needs a neutral progression engine the players can push against, and XP gives them a reason to pick dangerous fights. <strong>Published adventure:</strong> either works; milestones match the book's intended pacing with less work. <strong>Table full of optimizers:</strong> XP, so progression feels earned rather than scheduled — optimizers trust systems more than DMs.</p>
+
+      <h2>The hybrid most tables converge on</h2>
+      <p>Level by milestone, but <em>telegraph it</em>: "You'll hit level 4 after the cult is dealt with." Players get the almost-there feeling back without the arithmetic, and you keep full pacing control. Some tables add milestone side-awards — a level for a completed character arc, not just plot — which is where the system starts rewarding the actual point of the game.</p>
+
+      <h2>Whatever you pick, write it down at session zero</h2>
+      <p>Progression rules belong in the <a href="../session-zero-checklist/">session zero agreement</a> — switching systems mid-campaign after a player planned a build around level timing is how tables learn this lesson the hard way. And whichever system you run, the level-up night is a ceremony: new HP, new features, one round of "what can you do now?" Recap it on the <a href="../../session-notes-template/">session sheet</a> like everything else that matters.</p>
+    </div></div></section>`,
+    faq: [
+      ["Is milestone or XP leveling better for new DMs?", "Milestones — they remove all progression bookkeeping while you're still learning combat and pacing, and they match published adventure pacing with zero effort."],
+      ["Does XP leveling encourage murder-hoboing?", "It quietly rewards combat over avoidance since monsters carry the XP; milestone or hybrid systems fix that by rewarding solutions, not kills."],
+      ["How often should a milestone table level up?", "Roughly every 2–4 sessions for levels 1–4, then slower; the best sign you've got it right is players saying 'we're about to level, right?' rather than asking why they haven't."],
+      ["Can you switch from XP to milestones mid-campaign?", "Yes, cleanly — announce it, set the next milestone, and expect a smoother ride; switching the other direction mid-campaign is the messy one."],
     ],
     crumbs: [["/", "Home"], [null, "Guides"]],
   },
