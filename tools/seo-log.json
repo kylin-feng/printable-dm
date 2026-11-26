@@ -55,5 +55,13 @@
       "guides/what-dice-do-you-need/index.html",
       "tools/build.mjs"
     ]
+  },
+  {
+    "date": "2026-11-26",
+    "action": "heavy: new guide guides/milestone-vs-xp-leveling (target: milestone leveling 5e, xp vs milestone; ~790 words, FAQ schema, 2 interlinks)",
+    "pagesTouched": [
+      "guides/milestone-vs-xp-leveling/index.html",
+      "tools/build.mjs"
+    ]
   }
 ]
